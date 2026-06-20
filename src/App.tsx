@@ -7,16 +7,20 @@ import { MainMenu } from './components/Menu/MainMenu';
 import { GameMap } from './components/Map/GameMap';
 import { GamePanel } from './components/Game/GamePanel';
 import { ResultModal } from './components/Game/ResultModal';
+import { DemographicsView } from './components/Demographics/DemographicsView';
 import {
   buildProvinceQuestions, buildDistrictQuestions,
   buildCapitalQuestions, buildCityQuestions,
 } from './utils/gameLogic';
 import type { Province, District, City, GeoDistrictCollection } from './types';
 
+type AppView = 'game' | 'demographics';
+
 export default function App() {
   const { status, startGame, mode, difficulty } = useGameStore();
   const { theme } = useSettingsStore();
 
+  const [view, setView] = useState<AppView>('game');
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
   const [cities, setCities] = useState<City[]>([]);
@@ -53,10 +57,10 @@ export default function App() {
   const handlePlayAgain = useCallback(() => {
     if (!provinces.length || !districts.length) return;
     let qs;
-    if (mode === 'provinces')  qs = buildProvinceQuestions(provinces);
-    else if (mode === 'districts') qs = buildDistrictQuestions(districts, provinces);
-    else if (mode === 'capitals')  qs = buildCapitalQuestions(provinces);
-    else qs = buildCityQuestions(cities);
+    if (mode === 'provinces')       qs = buildProvinceQuestions(provinces);
+    else if (mode === 'districts')  qs = buildDistrictQuestions(districts, provinces);
+    else if (mode === 'capitals')   qs = buildCapitalQuestions(provinces);
+    else                            qs = buildCityQuestions(cities);
     startGame(mode, difficulty, qs);
   }, [mode, difficulty, provinces, districts, cities, startGame]);
 
@@ -79,9 +83,19 @@ export default function App() {
     );
   }
 
+  // Demographics view (separate from game flow)
+  if (view === 'demographics' && geoData) {
+    return (
+      <div className="min-h-screen bg-[#050814] text-slate-100">
+        <Header view={view} onViewChange={setView} />
+        <DemographicsView geoData={geoData} provinces={provinces} />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#050814] text-slate-100">
-      <Header />
+      <Header view={view} onViewChange={setView} />
 
       {status === 'menu' && (
         <MainMenu provinces={provinces} districts={districts} cities={cities} />

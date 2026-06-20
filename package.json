@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "process-data": "node scripts/processGeoJSON.js"
+    "process-data": "node scripts/processGeoJSON.js",
+    "process-demographics": "node scripts/processDemographics.cjs"
   },
   "dependencies": {
     "leaflet": "^1.9.4",
