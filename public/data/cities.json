@@ -1,0 +1,366 @@
+[
+  {
+    "id": "tashkent",
+    "nameUz": "Toshkent",
+    "nameRu": "Ташкент",
+    "nameEn": "Tashkent",
+    "province": "tashkent-city",
+    "coords": [
+      69.25,
+      41.3
+    ],
+    "isCapital": true,
+    "isCountryCapital": true,
+    "pop": 2800000
+  },
+  {
+    "id": "samarkand",
+    "nameUz": "Samarqand",
+    "nameRu": "Самарканд",
+    "nameEn": "Samarkand",
+    "province": "samarkand",
+    "coords": [
+      66.97,
+      39.65
+    ],
+    "isCapital": true,
+    "isCountryCapital": false,
+    "pop": 540000
+  },
+  {
+    "id": "namangan",
+    "nameUz": "Namangan",
+    "nameRu": "Наманган",
+    "nameEn": "Namangan",
+    "province": "namangan",
+    "coords": [
+      71.67,
+      41
+    ],
+    "isCapital": true,
+    "isCountryCapital": false,
+    "pop": 600000
+  },
+  {
+    "id": "andijan",
+    "nameUz": "Andijon",
+    "nameRu": "Андижан",
+    "nameEn": "Andijan",
+    "province": "andijan",
+    "coords": [
+      72.34,
+      40.78
+    ],
+    "isCapital": true,
+    "isCountryCapital": false,
+    "pop": 450000
+  },
+  {
+    "id": "nukus",
+    "nameUz": "Nukus",
+    "nameRu": "Нукус",
+    "nameEn": "Nukus",
+    "province": "karakalpakstan",
+    "coords": [
+      59.62,
+      42.45
+    ],
+    "isCapital": true,
+    "isCountryCapital": false,
+    "pop": 280000
+  },
+  {
+    "id": "fergana",
+    "nameUz": "Farg'ona",
+    "nameRu": "Фергана",
+    "nameEn": "Fergana",
+    "province": "fergana",
+    "coords": [
+      71.78,
+      40.38
+    ],
+    "isCapital": true,
+    "isCountryCapital": false,
+    "pop": 360000
+  },
+  {
+    "id": "bukhara",
+    "nameUz": "Buxoro",
+    "nameRu": "Бухара",
+    "nameEn": "Bukhara",
+    "province": "bukhara",
+    "coords": [
+      64.42,
+      39.78
+    ],
+    "isCapital": true,
+    "isCountryCapital": false,
+    "pop": 290000
+  },
+  {
+    "id": "urgench",
+    "nameUz": "Urganch",
+    "nameRu": "Ургенч",
+    "nameEn": "Urgench",
+    "province": "khorezm",
+    "coords": [
+      60.64,
+      41.55
+    ],
+    "isCapital": true,
+    "isCountryCapital": false,
+    "pop": 200000
+  },
+  {
+    "id": "karshi",
+    "nameUz": "Qarshi",
+    "nameRu": "Карши",
+    "nameEn": "Karshi",
+    "province": "kashkadarya",
+    "coords": [
+      65.79,
+      38.86
+    ],
+    "isCapital": true,
+    "isCountryCapital": false,
+    "pop": 260000
+  },
+  {
+    "id": "termez",
+    "nameUz": "Termiz",
+    "nameRu": "Термез",
+    "nameEn": "Termez",
+    "province": "surkhandarya",
+    "coords": [
+      67.27,
+      37.22
+    ],
+    "isCapital": true,
+    "isCountryCapital": false,
+    "pop": 140000
+  },
+  {
+    "id": "jizzakh",
+    "nameUz": "Jizzax",
+    "nameRu": "Джизак",
+    "nameEn": "Jizzakh",
+    "province": "jizzakh",
+    "coords": [
+      67.83,
+      40.12
+    ],
+    "isCapital": true,
+    "isCountryCapital": false,
+    "pop": 130000
+  },
+  {
+    "id": "gulistan",
+    "nameUz": "Guliston",
+    "nameRu": "Гулистан",
+    "nameEn": "Gulistan",
+    "province": "syrdarya",
+    "coords": [
+      68.78,
+      40.49
+    ],
+    "isCapital": true,
+    "isCountryCapital": false,
+    "pop": 65000
+  },
+  {
+    "id": "navoi",
+    "nameUz": "Navoiy",
+    "nameRu": "Навои",
+    "nameEn": "Navoi",
+    "province": "navoi",
+    "coords": [
+      65.37,
+      40.1
+    ],
+    "isCapital": true,
+    "isCountryCapital": false,
+    "pop": 130000
+  },
+  {
+    "id": "nurafshon",
+    "nameUz": "Nurafshon",
+    "nameRu": "Нурафшон",
+    "nameEn": "Nurafshon",
+    "province": "tashkent",
+    "coords": [
+      69.36,
+      41.05
+    ],
+    "isCapital": true,
+    "isCountryCapital": false,
+    "pop": 80000
+  },
+  {
+    "id": "margilan",
+    "nameUz": "Marg'ilon",
+    "nameRu": "Маргилан",
+    "nameEn": "Margilan",
+    "province": "fergana",
+    "coords": [
+      71.73,
+      40.47
+    ],
+    "isCapital": false,
+    "isCountryCapital": false,
+    "pop": 200000
+  },
+  {
+    "id": "kokand",
+    "nameUz": "Qo'qon",
+    "nameRu": "Коканд",
+    "nameEn": "Kokand",
+    "province": "fergana",
+    "coords": [
+      70.93,
+      40.53
+    ],
+    "isCapital": false,
+    "isCountryCapital": false,
+    "pop": 230000
+  },
+  {
+    "id": "chirchiq",
+    "nameUz": "Chirchiq",
+    "nameRu": "Чирчик",
+    "nameEn": "Chirchiq",
+    "province": "tashkent",
+    "coords": [
+      69.58,
+      41.47
+    ],
+    "isCapital": false,
+    "isCountryCapital": false,
+    "pop": 160000
+  },
+  {
+    "id": "olmaliq",
+    "nameUz": "Olmaliq",
+    "nameRu": "Алмалык",
+    "nameEn": "Almaliq",
+    "province": "tashkent",
+    "coords": [
+      69.6,
+      40.84
+    ],
+    "isCapital": false,
+    "isCountryCapital": false,
+    "pop": 130000
+  },
+  {
+    "id": "angren",
+    "nameUz": "Angren",
+    "nameRu": "Ангрен",
+    "nameEn": "Angren",
+    "province": "tashkent",
+    "coords": [
+      70.15,
+      41.01
+    ],
+    "isCapital": false,
+    "isCountryCapital": false,
+    "pop": 130000
+  },
+  {
+    "id": "bekobod",
+    "nameUz": "Bekobod",
+    "nameRu": "Бекабад",
+    "nameEn": "Bekabad",
+    "province": "tashkent",
+    "coords": [
+      69.23,
+      40.22
+    ],
+    "isCapital": false,
+    "isCountryCapital": false,
+    "pop": 80000
+  },
+  {
+    "id": "kattakurgan",
+    "nameUz": "Kattaqo'rg'on",
+    "nameRu": "Каттакурган",
+    "nameEn": "Kattakurgan",
+    "province": "samarkand",
+    "coords": [
+      66.26,
+      39.9
+    ],
+    "isCapital": false,
+    "isCountryCapital": false,
+    "pop": 80000
+  },
+  {
+    "id": "shahrisabz",
+    "nameUz": "Shahrisabz",
+    "nameRu": "Шахрисабз",
+    "nameEn": "Shakhrisabz",
+    "province": "kashkadarya",
+    "coords": [
+      66.83,
+      39.05
+    ],
+    "isCapital": false,
+    "isCountryCapital": false,
+    "pop": 100000
+  },
+  {
+    "id": "khiva",
+    "nameUz": "Xiva",
+    "nameRu": "Хива",
+    "nameEn": "Khiva",
+    "province": "khorezm",
+    "coords": [
+      60.36,
+      41.38
+    ],
+    "isCapital": false,
+    "isCountryCapital": false,
+    "pop": 52000
+  },
+  {
+    "id": "zarafshan",
+    "nameUz": "Zarafshon",
+    "nameRu": "Зарафшан",
+    "nameEn": "Zarafshan",
+    "province": "navoi",
+    "coords": [
+      64.19,
+      41.51
+    ],
+    "isCapital": false,
+    "isCountryCapital": false,
+    "pop": 75000
+  },
+  {
+    "id": "denov",
+    "nameUz": "Denov",
+    "nameRu": "Денау",
+    "nameEn": "Denau",
+    "province": "surkhandarya",
+    "coords": [
+      67.81,
+      38.31
+    ],
+    "isCapital": false,
+    "isCountryCapital": false,
+    "pop": 65000
+  },
+  {
+    "id": "muborak",
+    "nameUz": "Muborak",
+    "nameRu": "Мубарек",
+    "nameEn": "Mubarek",
+    "province": "kashkadarya",
+    "coords": [
+      65.47,
+      39.24
+    ],
+    "isCapital": false,
+    "isCountryCapital": false,
+    "pop": 30000
+  }
+]

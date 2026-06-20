@@ -1,0 +1,212 @@
+[
+  {
+    "id": "karakalpakstan",
+    "nameUz": "Qoraqalpog'iston Respublikasi",
+    "nameRu": "Республика Каракалпакстан",
+    "nameEn": "Republic of Karakalpakstan",
+    "capitalUz": "Nukus",
+    "capitalRu": "Нукус",
+    "capitalEn": "Nukus",
+    "capitalCoords": [
+      59.62,
+      42.45
+    ],
+    "color": "#ef4444",
+    "order": 1
+  },
+  {
+    "id": "khorezm",
+    "nameUz": "Xorazm viloyati",
+    "nameRu": "Хорезмская область",
+    "nameEn": "Khorezm region",
+    "capitalUz": "Urganch",
+    "capitalRu": "Ургенч",
+    "capitalEn": "Urgench",
+    "capitalCoords": [
+      60.64,
+      41.55
+    ],
+    "color": "#f97316",
+    "order": 2
+  },
+  {
+    "id": "bukhara",
+    "nameUz": "Buxoro viloyati",
+    "nameRu": "Бухарская область",
+    "nameEn": "Bukhara region",
+    "capitalUz": "Buxoro",
+    "capitalRu": "Бухара",
+    "capitalEn": "Bukhara",
+    "capitalCoords": [
+      64.42,
+      39.78
+    ],
+    "color": "#eab308",
+    "order": 3
+  },
+  {
+    "id": "navoi",
+    "nameUz": "Navoiy viloyati",
+    "nameRu": "Навоийская область",
+    "nameEn": "Navoi region",
+    "capitalUz": "Navoiy",
+    "capitalRu": "Навои",
+    "capitalEn": "Navoi",
+    "capitalCoords": [
+      65.37,
+      40.1
+    ],
+    "color": "#84cc16",
+    "order": 4
+  },
+  {
+    "id": "samarkand",
+    "nameUz": "Samarqand viloyati",
+    "nameRu": "Самаркандская область",
+    "nameEn": "Samarkand region",
+    "capitalUz": "Samarqand",
+    "capitalRu": "Самарканд",
+    "capitalEn": "Samarkand",
+    "capitalCoords": [
+      66.97,
+      39.65
+    ],
+    "color": "#10b981",
+    "order": 5
+  },
+  {
+    "id": "kashkadarya",
+    "nameUz": "Qashqadaryo viloyati",
+    "nameRu": "Кашкадарьинская область",
+    "nameEn": "Kashkadarya region",
+    "capitalUz": "Qarshi",
+    "capitalRu": "Карши",
+    "capitalEn": "Karshi",
+    "capitalCoords": [
+      65.79,
+      38.86
+    ],
+    "color": "#06b6d4",
+    "order": 6
+  },
+  {
+    "id": "surkhandarya",
+    "nameUz": "Surxondaryo viloyati",
+    "nameRu": "Сурхандарьинская область",
+    "nameEn": "Surkhandarya region",
+    "capitalUz": "Termiz",
+    "capitalRu": "Термез",
+    "capitalEn": "Termez",
+    "capitalCoords": [
+      67.27,
+      37.22
+    ],
+    "color": "#3b82f6",
+    "order": 7
+  },
+  {
+    "id": "jizzakh",
+    "nameUz": "Jizzax viloyati",
+    "nameRu": "Джизакская область",
+    "nameEn": "Jizzakh region",
+    "capitalUz": "Jizzax",
+    "capitalRu": "Джизак",
+    "capitalEn": "Jizzakh",
+    "capitalCoords": [
+      67.83,
+      40.12
+    ],
+    "color": "#6366f1",
+    "order": 8
+  },
+  {
+    "id": "syrdarya",
+    "nameUz": "Sirdaryo viloyati",
+    "nameRu": "Сырдарьинская область",
+    "nameEn": "Syrdarya region",
+    "capitalUz": "Guliston",
+    "capitalRu": "Гулистан",
+    "capitalEn": "Gulistan",
+    "capitalCoords": [
+      68.78,
+      40.49
+    ],
+    "color": "#8b5cf6",
+    "order": 9
+  },
+  {
+    "id": "tashkent",
+    "nameUz": "Toshkent viloyati",
+    "nameRu": "Ташкентская область",
+    "nameEn": "Tashkent region",
+    "capitalUz": "Nurafshon",
+    "capitalRu": "Нурафшон",
+    "capitalEn": "Nurafshon",
+    "capitalCoords": [
+      69.36,
+      41.05
+    ],
+    "color": "#ec4899",
+    "order": 10
+  },
+  {
+    "id": "tashkent-city",
+    "nameUz": "Toshkent shahri",
+    "nameRu": "город Ташкент",
+    "nameEn": "Tashkent city",
+    "capitalUz": "Toshkent",
+    "capitalRu": "Ташкент",
+    "capitalEn": "Tashkent",
+    "capitalCoords": [
+      69.25,
+      41.3
+    ],
+    "color": "#f43f5e",
+    "order": 11
+  },
+  {
+    "id": "namangan",
+    "nameUz": "Namangan viloyati",
+    "nameRu": "Наманганская область",
+    "nameEn": "Namangan region",
+    "capitalUz": "Namangan",
+    "capitalRu": "Наманган",
+    "capitalEn": "Namangan",
+    "capitalCoords": [
+      71.67,
+      41
+    ],
+    "color": "#14b8a6",
+    "order": 12
+  },
+  {
+    "id": "fergana",
+    "nameUz": "Farg'ona viloyati",
+    "nameRu": "Ферганская область",
+    "nameEn": "Fergana region",
+    "capitalUz": "Farg'ona",
+    "capitalRu": "Фергана",
+    "capitalEn": "Fergana",
+    "capitalCoords": [
+      71.78,
+      40.38
+    ],
+    "color": "#0ea5e9",
+    "order": 13
+  },
+  {
+    "id": "andijan",
+    "nameUz": "Andijon viloyati",
+    "nameRu": "Андижанская область",
+    "nameEn": "Andijan region",
+    "capitalUz": "Andijon",
+    "capitalRu": "Андижан",
+    "capitalEn": "Andijan",
+    "capitalCoords": [
+      72.34,
+      40.78
+    ],
+    "color": "#a855f7",
+    "order": 14
+  }
+]

@@ -1,0 +1,184 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Design tokens ──────────────────────────────────────────────────────── */
+@layer base {
+  :root {
+    --primary: 99 102 241;
+    --violet:  139 92 246;
+  }
+
+  html {
+    overflow-y: scroll;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(99,102,241,.3) transparent;
+  }
+
+  body { @apply antialiased; }
+
+  /* Universal color transition — does NOT include opacity/transform */
+  *, *::before, *::after {
+    transition-property: color, background-color, border-color, fill, stroke, box-shadow;
+    transition-duration: 150ms;
+    transition-timing-function: cubic-bezier(.4,0,.2,1);
+  }
+
+  /* Prevent transition override on animated elements */
+  [class*="animate-"] {
+    transition: none !important;
+  }
+}
+
+/* ── Reusable component classes ─────────────────────────────────────────── */
+@layer components {
+
+  /* Glass morphism cards */
+  .glass {
+    @apply bg-white/8 backdrop-blur-2xl border border-white/12 shadow-2xl;
+  }
+  .glass-dark {
+    @apply bg-slate-900/70 backdrop-blur-2xl border border-slate-700/40 shadow-2xl;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    @apply bg-gradient-to-r from-indigo-400 via-violet-400 to-purple-400 bg-clip-text text-transparent;
+  }
+  .gradient-text-gold {
+    @apply bg-gradient-to-r from-yellow-300 via-amber-400 to-orange-400 bg-clip-text text-transparent;
+  }
+
+  /* Primary gradient button */
+  .btn-primary {
+    @apply bg-gradient-to-r from-indigo-600 to-violet-600
+           hover:from-indigo-500 hover:to-violet-500
+           text-white font-bold rounded-2xl
+           shadow-glow active:scale-[.98]
+           transition-all duration-200;
+  }
+
+  /* Neon border effect */
+  .neon-border {
+    box-shadow: 0 0 0 1px rgba(99,102,241,.5),
+                0 0 12px rgba(99,102,241,.25),
+                inset 0 0 12px rgba(99,102,241,.05);
+  }
+
+  /* Section label */
+  .section-label {
+    @apply text-[10px] font-bold uppercase tracking-[.15em] text-slate-500 dark:text-slate-500
+           flex items-center gap-2 mb-3;
+  }
+  .section-label::before,
+  .section-label::after {
+    content: '';
+    @apply flex-1 h-px bg-gradient-to-r from-transparent via-slate-700/50 to-transparent;
+  }
+}
+
+/* ── Leaflet overrides ──────────────────────────────────────────────────── */
+.leaflet-container {
+  font-family: inherit;
+  cursor: crosshair !important;
+  background: transparent !important;
+}
+
+.geo-tooltip {
+  background: rgba(8, 10, 24, .95) !important;
+  border: 1px solid rgba(99,102,241,.35) !important;
+  border-radius: 10px !important;
+  padding: 5px 12px !important;
+  color: #e2e8f0 !important;
+  font-family: inherit !important;
+  font-weight: 600 !important;
+  font-size: 13px !important;
+  letter-spacing: -.01em !important;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5), 0 0 12px rgba(99,102,241,.2) !important;
+}
+.geo-tooltip::before { display: none !important; }
+
+.dark .leaflet-tile-pane { filter: brightness(.72) saturate(.85); }
+
+.leaflet-control-zoom {
+  border: none !important;
+  border-radius: 14px !important;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,.35), 0 0 0 1px rgba(99,102,241,.2) !important;
+}
+.leaflet-control-zoom a {
+  background: rgba(10,12,30,.9) !important;
+  color: #a5b4fc !important;
+  border-color: rgba(99,102,241,.2) !important;
+  font-size: 18px !important;
+  line-height: 28px !important;
+}
+.leaflet-control-zoom a:hover {
+  background: rgba(99,102,241,.2) !important;
+  color: #fff !important;
+}
+.leaflet-control-attribution {
+  @apply text-[10px] opacity-50;
+  background: rgba(5,8,20,.7) !important;
+  backdrop-filter: blur(8px);
+  color: #94a3b8 !important;
+  border-radius: 8px 0 0 0 !important;
+}
+.leaflet-control-attribution a { color: #818cf8 !important; }
+
+/* ── Scrollbar ─────────────────────────────────────────────────────────── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(99,102,241,.3);
+  border-radius: 100px;
+}
+::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,.5); }
+
+/* ── Custom keyframes ──────────────────────────────────────────────────── */
+@keyframes bounce {
+  from { transform: translateY(0px); }
+  to   { transform: translateY(-7px); }
+}
+
+@keyframes ring-progress {
+  from { stroke-dashoffset: 251; }
+  to   { stroke-dashoffset: 0; }
+}
+
+@keyframes gradient-flow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.gradient-flow {
+  background-size: 200% 200%;
+  animation: gradient-flow 4s ease infinite;
+}
+
+/* ── Map prevent text select ───────────────────────────────────────────── */
+.leaflet-container * { user-select: none; }
+
+/* ── Mobile game panel height ──────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .game-panel { max-height: 40vh; }
+}
+
+/* ── Shimmer effect ────────────────────────────────────────────────────── */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,.07) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* ── Background dot grid (decorative) ─────────────────────────────────── */
+.dot-grid {
+  background-image: radial-gradient(rgba(99,102,241,.15) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
