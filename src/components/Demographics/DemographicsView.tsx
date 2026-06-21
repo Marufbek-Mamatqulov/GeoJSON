@@ -45,12 +45,6 @@ function fmtCount(v: number | null): string {
   return v.toLocaleString();
 }
 
-function fmtMetric(val: number | null, metric: DemoMetric): string {
-  if (val == null) return '—';
-  if (metric === 'population') return fmtPop(val);
-  return (val > 0 && metric === 'growth' ? '+' : '') + fmtCount(val);
-}
-
 // Simple SVG sparkline from an array of values (normalised to 0-1)
 function Sparkline({ values, color }: { values: number[]; color: string }) {
   if (values.length < 2) return null;
