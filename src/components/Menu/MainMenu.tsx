@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   Globe, Map, MapPin, Landmark, Building2,
-  Leaf, Zap, Flame, Play, BarChart3,
+  Leaf, Zap, Flame, Play, BarChart3, ChevronLeft,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useGameStore } from '../../store/gameStore';
@@ -19,6 +19,7 @@ interface Props {
   provinces: Province[];
   districts: District[];
   cities: City[];
+  onBackToLanding: () => void;
 }
 
 const MODES: { id: GameMode; Icon: LucideIcon }[] = [
@@ -42,7 +43,7 @@ const DIFF_CONFIG: Record<Difficulty, {
   hard:   { Icon: Flame, color: 'text-rose-400',    iconColor: 'text-rose-400',    ring: 'border-rose-500/50   shadow-[0_0_14px_rgba(244,63,94,.25)]',   bg: 'from-rose-600/20   to-red-600/10' },
 };
 
-export function MainMenu({ provinces, districts, cities }: Props) {
+export function MainMenu({ provinces, districts, cities, onBackToLanding }: Props) {
   const { startGame, setShowStats, showStats } = useGameStore();
   const { language, difficulty, setDifficulty } = useSettingsStore();
   const [selectedMode, setSelectedMode] = useState<GameMode>('provinces');
@@ -170,6 +171,15 @@ export function MainMenu({ provinces, districts, cities }: Props) {
           >
             <BarChart3 size={16} strokeWidth={2} />
             <span>{t(language, 'stats')}</span>
+          </button>
+
+          <button
+            onClick={onBackToLanding}
+            className="w-full py-2 rounded-2xl font-medium text-xs text-slate-600 hover:text-slate-400
+              flex items-center justify-center gap-1.5 transition-colors duration-200"
+          >
+            <ChevronLeft size={13} strokeWidth={2.5} />
+            Bosh sahifaga qaytish
           </button>
         </div>
       </div>

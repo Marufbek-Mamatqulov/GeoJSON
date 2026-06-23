@@ -3,6 +3,7 @@ import { Map } from 'lucide-react';
 import { useGameStore } from './store/gameStore';
 import { useSettingsStore } from './store/settingsStore';
 import { Header } from './components/Layout/Header';
+import { LandingPage } from './components/Landing/LandingPage';
 import { MainMenu } from './components/Menu/MainMenu';
 import { GameMap } from './components/Map/GameMap';
 import { GamePanel } from './components/Game/GamePanel';
@@ -14,13 +15,13 @@ import {
 } from './utils/gameLogic';
 import type { Province, District, City, GeoDistrictCollection } from './types';
 
-type AppView = 'game' | 'demographics';
+export type AppView = 'landing' | 'game' | 'demographics';
 
 export default function App() {
-  const { status, startGame, mode, difficulty } = useGameStore();
+  const { status, startGame, mode, difficulty, goToMenu } = useGameStore();
   const { theme } = useSettingsStore();
 
-  const [view, setView] = useState<AppView>('game');
+  const [view, setView] = useState<AppView>('landing');
   const [provinces, setProvinces] = useState<Province[]>([]);
   const [districts, setDistricts] = useState<District[]>([]);
   const [cities, setCities] = useState<City[]>([]);
@@ -41,12 +42,12 @@ export default function App() {
       setProvinces(prov);
       setGeoData(geo);
       const dists: District[] = (geo as GeoDistrictCollection).features.map(f => ({
-        id: f.properties.id,
-        nameUz: f.properties.nameUz,
-        nameRu: f.properties.nameRu,
-        nameEn: f.properties.nameEn,
+        id:         f.properties.id,
+        nameUz:     f.properties.nameUz,
+        nameRu:     f.properties.nameRu,
+        nameEn:     f.properties.nameEn,
         provinceId: f.properties.provinceId,
-        center: f.properties.center,
+        center:     f.properties.center,
       }));
       setDistricts(dists);
       setCities(city);
@@ -57,12 +58,14 @@ export default function App() {
   const handlePlayAgain = useCallback(() => {
     if (!provinces.length || !districts.length) return;
     let qs;
-    if (mode === 'provinces')       qs = buildProvinceQuestions(provinces);
-    else if (mode === 'districts')  qs = buildDistrictQuestions(districts, provinces);
-    else if (mode === 'capitals')   qs = buildCapitalQuestions(provinces);
-    else                            qs = buildCityQuestions(cities);
+    if (mode === 'provinces')      qs = buildProvinceQuestions(provinces);
+    else if (mode === 'districts') qs = buildDistrictQuestions(districts, provinces);
+    else if (mode === 'capitals')  qs = buildCapitalQuestions(provinces);
+    else                           qs = buildCityQuestions(cities);
     startGame(mode, difficulty, qs);
   }, [mode, difficulty, provinces, districts, cities, startGame]);
+
+  const handleGoToMenu = () => { goToMenu(); setView('game'); };
 
   if (loading) {
     return (
@@ -83,7 +86,18 @@ export default function App() {
     );
   }
 
-  // Demographics view (separate from game flow)
+  if (view === 'landing') {
+    return (
+      <>
+        <Header view={view} onViewChange={setView} />
+        <LandingPage
+          onPlay={() => setView('game')}
+          onDemographics={() => setView('demographics')}
+        />
+      </>
+    );
+  }
+
   if (view === 'demographics' && geoData) {
     return (
       <div className="min-h-screen bg-[#050814] text-slate-100">
@@ -98,12 +112,18 @@ export default function App() {
       <Header view={view} onViewChange={setView} />
 
       {status === 'menu' && (
-        <MainMenu provinces={provinces} districts={districts} cities={cities} />
+        <MainMenu
+          provinces={provinces}
+          districts={districts}
+          cities={cities}
+          onBackToLanding={() => setView('landing')}
+        />
       )}
 
       {status === 'playing' && geoData && (
         <div className="flex flex-col md:flex-row h-screen pt-16">
-          <aside className="w-full md:w-72 lg:w-80 flex-shrink-0 border-b md:border-b-0 md:border-r border-slate-800/60 game-panel md:h-full overflow-hidden">
+          <aside className="w-full md:w-72 lg:w-80 flex-shrink-0 border-b md:border-b-0 md:border-r
+            border-slate-800/60 game-panel md:h-full overflow-hidden">
             <GamePanel provinces={provinces} />
           </aside>
           <main className="flex-1 relative">
@@ -115,6 +135,7 @@ export default function App() {
       {status === 'results' && (
         <ResultModal
           onPlayAgain={handlePlayAgain}
+          onGoToMenu={handleGoToMenu}
           provinces={provinces}
           districts={districts}
           cities={cities}

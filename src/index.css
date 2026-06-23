@@ -183,6 +183,93 @@
   background-size: 28px 28px;
 }
 
+/* ── Mesh gradient background ──────────────────────────────────────────── */
+.mesh-bg {
+  background:
+    radial-gradient(ellipse 80% 60% at 20% 50%,  rgba(99,102,241,.09) 0%, transparent 100%),
+    radial-gradient(ellipse 60% 50% at 80% 20%,  rgba(139,92,246,.07)  0%, transparent 100%),
+    radial-gradient(ellipse 50% 40% at 60% 90%,  rgba(6,182,212,.05)   0%, transparent 100%),
+    radial-gradient(ellipse 70% 60% at 10% 80%,  rgba(99,102,241,.04)  0%, transparent 100%);
+}
+
+/* ── Section divider ───────────────────────────────────────────────────── */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(99,102,241,.25) 50%, transparent);
+}
+
+/* ── Gradient border card ──────────────────────────────────────────────── */
+.gradient-border {
+  position: relative;
+}
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  padding: 1px;
+  background: linear-gradient(135deg, rgba(99,102,241,.4), rgba(139,92,246,.2), rgba(99,102,241,.1));
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+/* ── Number counter clip ───────────────────────────────────────────────── */
+.counter-clip {
+  overflow: hidden;
+}
+
+/* ── Noise overlay ─────────────────────────────────────────────────────── */
+.noise::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* ── Feature card hover glow ───────────────────────────────────────────── */
+.feature-card {
+  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1),
+              box-shadow 0.3s ease,
+              border-color 0.3s ease;
+}
+.feature-card:hover {
+  transform: translateY(-4px);
+}
+
+/* ── Step connector line ───────────────────────────────────────────────── */
+.step-connector {
+  background: linear-gradient(90deg, rgba(99,102,241,.5), rgba(139,92,246,.5));
+}
+
+/* ── Hero grid line ────────────────────────────────────────────────────── */
+.hero-grid {
+  background-image:
+    linear-gradient(rgba(99,102,241,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(99,102,241,.06) 1px, transparent 1px);
+  background-size: 60px 60px;
+}
+
+/* ── Landing text gradient (animated) ─────────────────────────────────── */
+.gradient-text-animated {
+  background: linear-gradient(
+    135deg,
+    #818cf8 0%,
+    #a78bfa 25%,
+    #67e8f9 50%,
+    #818cf8 75%,
+    #a78bfa 100%
+  );
+  background-size: 300% 300%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientPan 5s ease-in-out infinite;
+}
+
 /* ══════════════════════════════════════════════════════════════════════════
    LIGHT MODE OVERRIDES
    Components use hardcoded dark values; these CSS selectors flip them

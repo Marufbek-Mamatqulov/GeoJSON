@@ -8,6 +8,7 @@ import type { GameMode, Difficulty } from '../../types';
 
 interface Props {
   onPlayAgain: () => void;
+  onGoToMenu?: () => void;
   provinces: import('../../types').Province[];
   districts: import('../../types').District[];
   cities: import('../../types').City[];
@@ -38,8 +39,9 @@ function getGrade(pct: number): Grade {
   return 'D';
 }
 
-export function ResultModal({ onPlayAgain }: Props) {
+export function ResultModal({ onPlayAgain, onGoToMenu }: Props) {
   const { score, answers, mode, difficulty, goToMenu } = useGameStore();
+  const handleMenu = () => { if (onGoToMenu) onGoToMenu(); else goToMenu(); };
   const { language } = useSettingsStore();
   const stats = loadStats();
 
@@ -139,7 +141,7 @@ export function ResultModal({ onPlayAgain }: Props) {
           </button>
 
           <button
-            onClick={goToMenu}
+            onClick={handleMenu}
             className="w-full py-3 rounded-2xl font-bold text-sm text-slate-400 hover:text-slate-200
               border border-slate-700/50 hover:border-indigo-500/30
               hover:bg-indigo-500/8 transition-all duration-200
