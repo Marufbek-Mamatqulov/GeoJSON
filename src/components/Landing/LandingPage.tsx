@@ -96,8 +96,8 @@ const FEATURES: {
   {
     Icon: MapPin,
     title: 'Tumanlarni topish',
-    desc: "199 ta tuman — eng qiyin daraja. Har bir tumanning viloyatini ham bilgan holda aniq toping.",
-    badge: '199 tuman',
+    desc: "208 ta tuman/shahar — eng qiyin daraja. Har bir tumanning viloyatini ham bilgan holda aniq toping.",
+    badge: '208 tuman',
     color: 'from-violet-500/10 to-violet-600/5',
     border: 'border-violet-500/15 hover:border-violet-500/40',
     iconBg: 'bg-violet-500/12 border-violet-500/20',
@@ -223,7 +223,7 @@ function HeroSection({ onPlay, onDemographics }: Props) {
       {/* Sub */}
       <p className="relative max-w-lg text-center text-slate-400 text-lg leading-relaxed mb-10
         animate-fade-in" style={{ animationDelay: '160ms' }}>
-        199 tuman, 14 viloyat, 3 tilni qo'llab-quvvatlaydi.
+        208 tuman/shahar, 14 viloyat, 3 tilni qo'llab-quvvatlaydi.
         Interaktiv xaritada o'ynab, O'zbekiston geografiyasini mukammal o'rganing.
       </p>
 
@@ -262,7 +262,7 @@ function HeroSection({ onPlay, onDemographics }: Props) {
       <div className="relative flex flex-wrap justify-center gap-2.5 mt-14
         animate-slide-up" style={{ animationDelay: '360ms' }}>
         {[
-          { val: '199', label: 'Tuman', color: 'border-indigo-500/20 text-indigo-300' },
+          { val: '208', label: 'Tuman/Shahar', color: 'border-indigo-500/20 text-indigo-300' },
           { val: '14',  label: 'Viloyat', color: 'border-violet-500/20 text-violet-300' },
           { val: '3',   label: 'Til', color: 'border-cyan-500/20 text-cyan-300' },
           { val: '15',  label: 'Savol/o\'yin', color: 'border-emerald-500/20 text-emerald-300' },
@@ -293,7 +293,7 @@ function StatsStrip() {
   const { ref, inView } = useInView();
 
   const stats = [
-    { target: 199,  suffix: '',   label: 'Tuman', Icon: MapPin,     color: 'text-indigo-400' },
+    { target: 208,  suffix: '',   label: 'Tuman/Shahar', Icon: MapPin, color: 'text-indigo-400' },
     { target: 14,   suffix: '',   label: 'Viloyat', Icon: Map,        color: 'text-violet-400' },
     { target: 36_8, suffix: 'M', label: "Aholi (ming)", Icon: Users,      color: 'text-cyan-400', display: '36.8M' },
     { target: 3,    suffix: '',   label: 'Til', Icon: Globe,      color: 'text-emerald-400' },

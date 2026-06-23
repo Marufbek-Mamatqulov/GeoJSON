@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import {
   Globe, Map, MapPin, Landmark, Building2,
+  Mountain, Waves, Clock, Star, Droplets, Trees,
   Leaf, Zap, Flame, Play, BarChart3, ChevronLeft,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -9,24 +10,53 @@ import { useSettingsStore } from '../../store/settingsStore';
 import { ModeCard } from './ModeCard';
 import { StatsModal } from '../Stats/StatsModal';
 import { t } from '../../i18n';
-import type { GameMode, Difficulty, Province, District, City } from '../../types';
-import {
-  buildProvinceQuestions, buildDistrictQuestions,
-  buildCapitalQuestions, buildCityQuestions,
-} from '../../utils/gameLogic';
+import type { GameMode, Difficulty, Province, District, City, GeoFeature, Question } from '../../types';
 
 interface Props {
   provinces: Province[];
   districts: District[];
   cities: City[];
+  mountains: GeoFeature[];
+  rivers: GeoFeature[];
+  historical: GeoFeature[];
+  attractions: GeoFeature[];
+  reservoirs: GeoFeature[];
+  forests: GeoFeature[];
+  buildQuestions: (mode: GameMode) => Question[];
   onBackToLanding: () => void;
 }
 
-const MODES: { id: GameMode; Icon: LucideIcon }[] = [
-  { id: 'provinces', Icon: Map        },
-  { id: 'districts', Icon: MapPin     },
-  { id: 'capitals',  Icon: Landmark   },
-  { id: 'cities',    Icon: Building2  },
+interface ModeEntry { id: GameMode; Icon: LucideIcon }
+
+const CATEGORIES: { labelKey: Parameters<typeof t>[1]; color: string; modes: ModeEntry[] }[] = [
+  {
+    labelKey: 'cat_geography',
+    color: 'text-indigo-400',
+    modes: [
+      { id: 'provinces', Icon: Map       },
+      { id: 'districts', Icon: MapPin    },
+      { id: 'capitals',  Icon: Landmark  },
+      { id: 'cities',    Icon: Building2 },
+    ],
+  },
+  {
+    labelKey: 'cat_nature',
+    color: 'text-emerald-400',
+    modes: [
+      { id: 'mountains',  Icon: Mountain  },
+      { id: 'rivers',     Icon: Waves     },
+      { id: 'reservoirs', Icon: Droplets  },
+      { id: 'forests',    Icon: Trees     },
+    ],
+  },
+  {
+    labelKey: 'cat_culture',
+    color: 'text-amber-400',
+    modes: [
+      { id: 'historical',  Icon: Clock },
+      { id: 'attractions', Icon: Star  },
+    ],
+  },
 ];
 
 const DIFFS: Difficulty[] = ['easy', 'medium', 'hard'];
@@ -43,18 +73,13 @@ const DIFF_CONFIG: Record<Difficulty, {
   hard:   { Icon: Flame, color: 'text-rose-400',    iconColor: 'text-rose-400',    ring: 'border-rose-500/50   shadow-[0_0_14px_rgba(244,63,94,.25)]',   bg: 'from-rose-600/20   to-red-600/10' },
 };
 
-export function MainMenu({ provinces, districts, cities, onBackToLanding }: Props) {
+export function MainMenu({ buildQuestions, onBackToLanding }: Props) {
   const { startGame, setShowStats, showStats } = useGameStore();
   const { language, difficulty, setDifficulty } = useSettingsStore();
   const [selectedMode, setSelectedMode] = useState<GameMode>('provinces');
 
   const handleStart = () => {
-    let qs;
-    if (selectedMode === 'provinces')      qs = buildProvinceQuestions(provinces);
-    else if (selectedMode === 'districts') qs = buildDistrictQuestions(districts, provinces);
-    else if (selectedMode === 'capitals')  qs = buildCapitalQuestions(provinces);
-    else                                   qs = buildCityQuestions(cities);
-    startGame(selectedMode, difficulty, qs);
+    startGame(selectedMode, difficulty, buildQuestions(selectedMode));
   };
 
   return (
@@ -66,44 +91,53 @@ export function MainMenu({ provinces, districts, cities, onBackToLanding }: Prop
       <div className="absolute bottom-0 right-0 w-72 h-72 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* Hero */}
-      <div className="relative text-center mb-10 animate-fade-in">
-        <div className="w-20 h-20 rounded-3xl bg-gradient-to-br from-indigo-500/20 to-violet-500/10
-          border border-indigo-500/25 flex items-center justify-center mx-auto mb-5 animate-float">
-          <Globe size={38} className="text-indigo-400" strokeWidth={1.5} />
+      <div className="relative text-center mb-7 animate-fade-in">
+        <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-violet-500/10
+          border border-indigo-500/25 flex items-center justify-center mx-auto mb-4 animate-float">
+          <Globe size={30} className="text-indigo-400" strokeWidth={1.5} />
         </div>
 
-        <h1 className="text-4xl md:text-5xl font-black tracking-tight mb-2 leading-none">
+        <h1 className="text-3xl md:text-4xl font-black tracking-tight mb-1.5 leading-none">
           <span className="gradient-text">GeoO</span>
           <span className="text-slate-200">'yin</span>
         </h1>
-        <p className="text-slate-500 text-sm md:text-base font-medium">
-          {t(language, 'tagline')}
-        </p>
+        <p className="text-slate-500 text-sm font-medium">{t(language, 'tagline')}</p>
 
-        <div className="flex items-center justify-center gap-2 mt-4">
+        <div className="flex items-center justify-center gap-2 mt-3">
           <span className="px-2.5 py-1 rounded-full border text-xs font-semibold bg-indigo-500/10 border-indigo-500/25 text-indigo-300">15 savol</span>
           <span className="px-2.5 py-1 rounded-full border text-xs font-semibold bg-violet-500/10 border-violet-500/25 text-violet-300">3 til</span>
-          <span className="px-2.5 py-1 rounded-full border text-xs font-semibold bg-cyan-500/10 border-cyan-500/25 text-cyan-300">199 tuman</span>
+          <span className="px-2.5 py-1 rounded-full border text-xs font-semibold bg-cyan-500/10 border-cyan-500/25 text-cyan-300">208 tuman</span>
         </div>
       </div>
 
       {/* Content */}
-      <div className="relative w-full max-w-md space-y-5 animate-slide-up">
+      <div className="relative w-full max-w-md space-y-4 animate-slide-up">
 
-        {/* Mode selection */}
+        {/* Mode selection — 2-column grid per category */}
         <section>
-          <p className="section-label">{t(language, 'chooseMode')}</p>
-          <div className="grid grid-cols-1 gap-2">
-            {MODES.map(({ id, Icon }) => (
-              <ModeCard
-                key={id}
-                mode={id}
-                Icon={Icon}
-                title={t(language, `mode_${id}` as Parameters<typeof t>[1])}
-                desc={t(language, `mode_${id}_desc` as Parameters<typeof t>[1])}
-                active={selectedMode === id}
-                onClick={() => setSelectedMode(id)}
-              />
+          <p className="section-label mb-3">{t(language, 'chooseMode')}</p>
+          <div className="space-y-4">
+            {CATEGORIES.map(cat => (
+              <div key={cat.labelKey}>
+                {/* Category label */}
+                <p className={`text-[9px] font-black uppercase tracking-[0.18em] mb-2 px-0.5 ${cat.color}`}>
+                  — {t(language, cat.labelKey)} —
+                </p>
+
+                {/* 2-column grid */}
+                <div className="grid grid-cols-2 gap-2">
+                  {cat.modes.map(({ id, Icon }) => (
+                    <ModeCard
+                      key={id}
+                      mode={id}
+                      Icon={Icon}
+                      title={t(language, `mode_${id}` as Parameters<typeof t>[1])}
+                      active={selectedMode === id}
+                      onClick={() => setSelectedMode(id)}
+                    />
+                  ))}
+                </div>
+              </div>
             ))}
           </div>
         </section>

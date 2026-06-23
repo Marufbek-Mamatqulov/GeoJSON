@@ -1,4 +1,4 @@
-import type { Difficulty, Province, District, City, Question, GameMode } from '../types';
+import type { Difficulty, Province, District, City, Question, GameMode, GeoFeature } from '../types';
 
 // ── Distance ──────────────────────────────────────────────────────────────
 export function haversineKm(
@@ -88,7 +88,6 @@ export function buildDistrictQuestions(districts: District[], provinces: Provinc
     coords: d.center,
     correctDistrictId: d.id,
     correctProvinceId: d.provinceId,
-    // attach province name for hint
     ...(provMap[d.provinceId] && {
       _provinceNameUz: provMap[d.provinceId].nameUz,
       _provinceNameRu: provMap[d.provinceId].nameRu,
@@ -119,6 +118,20 @@ export function buildCityQuestions(cities: City[]): Question[] {
     targetNameRu: c.nameRu,
     targetNameEn: c.nameEn,
     coords: c.coords,
+  }));
+}
+
+// Unified builder for province-click geo-feature modes:
+// mountains, rivers, historical, attractions, reservoirs, forests
+export function buildGeoFeatureQuestions(features: GeoFeature[], mode: GameMode): Question[] {
+  return shuffle(features).slice(0, COUNT).map((f, i) => ({
+    id: `q-${i}`,
+    type: mode,
+    targetId: f.id,
+    targetNameUz: f.nameUz,
+    targetNameRu: f.nameRu,
+    targetNameEn: f.nameEn,
+    correctProvinceId: f.provinceId,
   }));
 }
 

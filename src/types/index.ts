@@ -1,7 +1,9 @@
 export type Language = 'uz' | 'ru' | 'en';
 export type Theme = 'light' | 'dark';
 export type Difficulty = 'easy' | 'medium' | 'hard';
-export type GameMode = 'provinces' | 'districts' | 'capitals' | 'cities';
+export type GameMode =
+  | 'provinces' | 'districts' | 'capitals' | 'cities'
+  | 'mountains' | 'rivers' | 'historical' | 'attractions' | 'reservoirs' | 'forests';
 export type GameStatus = 'menu' | 'playing' | 'results';
 export type AnswerFeedback = 'correct' | 'wrong' | null;
 
@@ -39,17 +41,29 @@ export interface City {
   pop: number;
 }
 
+// Generic geographic feature (mountains, rivers, historical places, etc.)
+export interface GeoFeature {
+  id: string;
+  nameUz: string;
+  nameRu: string;
+  nameEn: string;
+  provinceId: string;
+  lat: number;
+  lng: number;
+  descUz?: string;
+}
+
 export interface Question {
   id: string;
   type: GameMode;
-  targetId: string;       // province id or district id or city id
+  targetId: string;
   targetNameUz: string;
   targetNameRu: string;
   targetNameEn: string;
-  provinceId?: string;    // for districts: which province it belongs to
-  coords?: [number, number]; // for location modes (capitals, cities)
-  correctDistrictId?: string; // for district mode
-  correctProvinceId?: string; // for province mode
+  provinceId?: string;
+  coords?: [number, number]; // [lng, lat]
+  correctDistrictId?: string;
+  correctProvinceId?: string;
 }
 
 export interface AnswerResult {

@@ -6,7 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import { useGameStore } from '../../store/gameStore';
 import { useSettingsStore } from '../../store/settingsStore';
 import { useGame } from '../../hooks/useGame';
-import type { GeoDistrictCollection, GeoDistrictFeature, Province, City } from '../../types';
+import type { GeoDistrictCollection, GeoDistrictFeature, Province, City, GameMode } from '../../types';
 
 // Fix default Leaflet icon paths
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
@@ -27,6 +27,12 @@ const TARGET_ICON = L.divIcon({
   iconSize: [32, 40],
   iconAnchor: [16, 40],
 });
+
+// Modes where clicking a polygon resolves to the province level
+const PROVINCE_CLICK_MODES: GameMode[] = [
+  'provinces', 'capitals',
+  'mountains', 'rivers', 'historical', 'attractions', 'reservoirs', 'forests',
+];
 
 interface Props {
   geoData: GeoDistrictCollection;
@@ -91,18 +97,19 @@ export function GameMap({ geoData, provinces, cities }: Props) {
     return { lat: q.coords[1], lng: q.coords[0] };
   }, [q]);
 
+  const isProvClickMode = PROVINCE_CLICK_MODES.includes(mode);
+
   // ── Polygon style ──────────────────────────────────────────────────────
   const featureStyle = useCallback((feature?: GeoDistrictFeature): PathOptions => {
     if (!feature) return {};
     const { id, provinceId } = feature.properties;
 
-    if (mode === 'provinces') {
+    if (isProvClickMode) {
       if (highlightCorrectId && provinceId === highlightCorrectId)
         return { fillColor: '#22c55e', color: '#16a34a', weight: 2, fillOpacity: 0.7, opacity: 1 };
       if (highlightWrongId && id === highlightWrongId)
         return { fillColor: '#ef4444', color: '#dc2626', weight: 2, fillOpacity: 0.6, opacity: 1 };
       const base = provColors[provinceId] ?? '#94a3b8';
-      // Match border to fill so inter-district edges within same province disappear
       return { fillColor: base, color: base, weight: 1, fillOpacity: 0.6, opacity: 1 };
     }
 
@@ -115,12 +122,12 @@ export function GameMap({ geoData, provinces, cities }: Props) {
       return { fillColor: base, color: '#fff', weight: 0.8, fillOpacity: 0.45, opacity: 0.7 };
     }
 
-    // capitals / cities
+    // cities
     if (highlightCorrectId && provinceId === highlightCorrectId)
       return { fillColor: '#22c55e', color: '#16a34a', weight: 2, fillOpacity: 0.5, opacity: 1 };
     const base = provColors[provinceId] ?? '#94a3b8';
     return { fillColor: base, color: '#fff', weight: 0.8, fillOpacity: 0.3, opacity: 0.6 };
-  }, [mode, highlightCorrectId, highlightWrongId, provColors]);
+  }, [mode, isProvClickMode, highlightCorrectId, highlightWrongId, provColors]);
 
   // Re-style without full GeoJSON remount (for smooth feedback)
   useEffect(() => {
@@ -140,7 +147,7 @@ export function GameMap({ geoData, provinces, cities }: Props) {
         if (feedback) return;
         const lang = useSettingsStore.getState().language;
         const nameKey = `name${lang[0].toUpperCase()}${lang.slice(1)}` as 'nameUz';
-        const displayName = mode === 'provinces'
+        const displayName = isProvClickMode
           ? (provMap[feature.properties.provinceId]?.[nameKey] ?? feature.properties[nameKey])
           : feature.properties[nameKey];
         path.bindTooltip(
@@ -156,11 +163,11 @@ export function GameMap({ geoData, provinces, cities }: Props) {
       click: (e: LeafletMouseEvent) => {
         if (feedback || status !== 'playing') return;
         L.DomEvent.stopPropagation(e);
-        if (mode === 'provinces') handleProvinceClick(feature);
+        if (isProvClickMode) handleProvinceClick(feature);
         else if (mode === 'districts') handleDistrictClick(feature);
       },
     });
-  }, [mode, feedback, status, featureStyle, provMap, handleProvinceClick, handleDistrictClick]);
+  }, [mode, isProvClickMode, feedback, status, featureStyle, provMap, handleProvinceClick, handleDistrictClick]);
 
   // ── City dot markers ──────────────────────────────────────────────────
   const cityMarkers = useMemo(() => {
@@ -193,7 +200,7 @@ export function GameMap({ geoData, provinces, cities }: Props) {
       <TileLayer url={tileUrl} attribution={tileAttr} subdomains="abcd" maxZoom={19} />
       <MapInit />
 
-      {/* Location-mode click handler */}
+      {/* Location-mode click handler (capitals / cities) */}
       <LocationClickHandler
         active={mode === 'capitals' || mode === 'cities'}
         onLocationClick={handleLocationClick}

@@ -10,7 +10,12 @@ const uz = {
   settings: 'Sozlamalar',
   back: 'Orqaga',
 
-  // Game modes
+  // Mode categories
+  cat_geography: 'Asosiy geografiya',
+  cat_nature: 'Tabiat',
+  cat_culture: 'Tarix va madaniyat',
+
+  // Game modes — basic
   mode_provinces: 'Viloyatlarni topish',
   mode_provinces_desc: "Ko'rsatilgan viloyatni xaritada toping",
   mode_districts: 'Tumanlarni topish',
@@ -20,11 +25,25 @@ const uz = {
   mode_cities: 'Shaharlarni topish',
   mode_cities_desc: "Ko'rsatilgan shaharni xaritada toping",
 
+  // Game modes — new
+  mode_mountains: "Tog'larni topish",
+  mode_mountains_desc: "Ko'rsatilgan tog' yoki tog' tizimi qaysi viloyatda joylashganini toping",
+  mode_rivers: 'Daryolarni topish',
+  mode_rivers_desc: "Ko'rsatilgan daryo qaysi viloyatdan oqib o'tishini toping",
+  mode_historical: 'Tarixiy joylar',
+  mode_historical_desc: "Qadimiy va tarixiy yodgorlik qaysi viloyatda joylashganini toping",
+  mode_attractions: 'Mashhur joylar',
+  mode_attractions_desc: "Mashhur turizm joyi qaysi viloyatda ekanini toping",
+  mode_reservoirs: 'Suv omborlari',
+  mode_reservoirs_desc: "Ko'rsatilgan suv ombori qaysi viloyatda ekanini toping",
+  mode_forests: "O'rmonlar va bog'lar",
+  mode_forests_desc: "Milliy bog' yoki zaxira qaysi viloyatda joylashganini toping",
+
   // Difficulty
   easy: 'Oson',
-  easy_desc: '45 son, ko\'proq vaqt',
+  easy_desc: "45 son, ko'proq vaqt",
   medium: "O'rta",
-  medium_desc: '30 son, o\'rta vaqt',
+  medium_desc: "30 son, o'rta vaqt",
   hard: 'Qiyin',
   hard_desc: '15 son, kam vaqt',
 
@@ -38,6 +57,12 @@ const uz = {
   findDistrict: 'Bu tumanni toping:',
   findCapital: "Bu viloyatning markazini toping:",
   findCity: 'Bu shaharni toping:',
+  findMountain: "Bu tog' qaysi viloyatda?",
+  findRiver: 'Bu daryo qaysi viloyatdan oqadi?',
+  findHistorical: 'Bu tarixiy joy qaysi viloyatda?',
+  findAttraction: 'Bu mashhur joy qaysi viloyatda?',
+  findReservoir: 'Bu suv ombori qaysi viloyatda?',
+  findForest: "Bu milliy bog'/zaxira qaysi viloyatda?",
   inProvince: 'Viloyat:',
   clickMap: 'Xaritada bosing',
   correct: "To'g'ri!",
@@ -58,7 +83,7 @@ const uz = {
   wrongAnswers: 'Xato javoblar',
   accuracy: 'Aniqlik',
   newHighScore: 'Yangi rekord!',
-  playAgain: 'Qayta o\'ynash',
+  playAgain: "Qayta o'ynash",
   mainMenu: 'Asosiy menyu',
   share: 'Ulashish',
 

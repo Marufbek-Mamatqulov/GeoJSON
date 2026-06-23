@@ -1,5 +1,6 @@
 import {
   Map, MapPin, Landmark, Building2,
+  Mountain, Waves, Clock, Star, Droplets, Trees,
   Heart, CheckCircle2, XCircle, X, Timer,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
@@ -12,10 +13,29 @@ import type { Province, GameMode } from '../../types';
 interface Props { provinces: Province[] }
 
 const MODE_ICONS: Record<GameMode, LucideIcon> = {
-  provinces: Map,
-  districts: MapPin,
-  capitals:  Landmark,
-  cities:    Building2,
+  provinces:   Map,
+  districts:   MapPin,
+  capitals:    Landmark,
+  cities:      Building2,
+  mountains:   Mountain,
+  rivers:      Waves,
+  historical:  Clock,
+  attractions: Star,
+  reservoirs:  Droplets,
+  forests:     Trees,
+};
+
+const PROMPT_KEYS: Record<GameMode, Parameters<typeof t>[1]> = {
+  provinces:   'findProvince',
+  districts:   'findDistrict',
+  capitals:    'findCapital',
+  cities:      'findCity',
+  mountains:   'findMountain',
+  rivers:      'findRiver',
+  historical:  'findHistorical',
+  attractions: 'findAttraction',
+  reservoirs:  'findReservoir',
+  forests:     'findForest',
 };
 
 const MAX_LIVES: Record<string, number> = { easy: 5, medium: 3, hard: 2 };
@@ -57,10 +77,7 @@ export function GamePanel({ provinces }: Props) {
   const provinceName = q.provinceId ? (provMap[q.provinceId]?.[nk] ?? q.provinceId) : null;
   const targetName   = q[`targetName${language.charAt(0).toUpperCase() + language.slice(1)}` as 'targetNameUz'];
 
-  const promptKey = mode === 'provinces' ? 'findProvince'
-    : mode === 'districts' ? 'findDistrict'
-    : mode === 'capitals'  ? 'findCapital'
-    : 'findCity';
+  const promptKey = PROMPT_KEYS[mode] ?? 'findProvince';
 
   const lastAnswer = answers[answers.length - 1];
 
@@ -122,7 +139,7 @@ export function GamePanel({ provinces }: Props) {
           <div className="space-y-4 animate-fade-in">
             <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold flex items-center gap-1.5">
               <Timer size={11} strokeWidth={2} />
-              {t(language, promptKey as Parameters<typeof t>[1])}
+              {t(language, promptKey)}
             </p>
 
             <div className="relative rounded-2xl overflow-hidden border border-indigo-500/20 bg-gradient-to-br from-indigo-500/10 to-violet-500/5">

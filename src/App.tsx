@@ -12,8 +12,9 @@ import { DemographicsView } from './components/Demographics/DemographicsView';
 import {
   buildProvinceQuestions, buildDistrictQuestions,
   buildCapitalQuestions, buildCityQuestions,
+  buildGeoFeatureQuestions,
 } from './utils/gameLogic';
-import type { Province, District, City, GeoDistrictCollection } from './types';
+import type { Province, District, City, GeoDistrictCollection, GeoFeature, GameMode } from './types';
 
 export type AppView = 'landing' | 'game' | 'demographics';
 
@@ -28,6 +29,14 @@ export default function App() {
   const [geoData, setGeoData] = useState<GeoDistrictCollection | null>(null);
   const [loading, setLoading] = useState(true);
 
+  // Extra geo-feature data
+  const [mountains,    setMountains]    = useState<GeoFeature[]>([]);
+  const [rivers,       setRivers]       = useState<GeoFeature[]>([]);
+  const [historical,   setHistorical]   = useState<GeoFeature[]>([]);
+  const [attractions,  setAttractions]  = useState<GeoFeature[]>([]);
+  const [reservoirs,   setReservoirs]   = useState<GeoFeature[]>([]);
+  const [forests,      setForests]      = useState<GeoFeature[]>([]);
+
   useEffect(() => {
     const root = document.documentElement;
     root.classList.toggle('dark', theme === 'dark');
@@ -38,7 +47,13 @@ export default function App() {
       fetch('data/provinces.json').then(r => r.json()),
       fetch('data/districts.geojson').then(r => r.json()),
       fetch('data/cities.json').then(r => r.json()),
-    ]).then(([prov, geo, city]) => {
+      fetch('data/mountains.json').then(r => r.json()),
+      fetch('data/rivers.json').then(r => r.json()),
+      fetch('data/historical.json').then(r => r.json()),
+      fetch('data/attractions.json').then(r => r.json()),
+      fetch('data/reservoirs.json').then(r => r.json()),
+      fetch('data/forests.json').then(r => r.json()),
+    ]).then(([prov, geo, city, mtn, riv, hist, attr, res, for_]) => {
       setProvinces(prov);
       setGeoData(geo);
       const dists: District[] = (geo as GeoDistrictCollection).features.map(f => ({
@@ -51,19 +66,34 @@ export default function App() {
       }));
       setDistricts(dists);
       setCities(city);
+      setMountains(mtn);
+      setRivers(riv);
+      setHistorical(hist);
+      setAttractions(attr);
+      setReservoirs(res);
+      setForests(for_);
       setLoading(false);
     }).catch(() => setLoading(false));
   }, []);
 
+  const buildQuestions = useCallback((m: GameMode) => {
+    if (m === 'provinces')   return buildProvinceQuestions(provinces);
+    if (m === 'districts')   return buildDistrictQuestions(districts, provinces);
+    if (m === 'capitals')    return buildCapitalQuestions(provinces);
+    if (m === 'cities')      return buildCityQuestions(cities);
+    if (m === 'mountains')   return buildGeoFeatureQuestions(mountains, m);
+    if (m === 'rivers')      return buildGeoFeatureQuestions(rivers, m);
+    if (m === 'historical')  return buildGeoFeatureQuestions(historical, m);
+    if (m === 'attractions') return buildGeoFeatureQuestions(attractions, m);
+    if (m === 'reservoirs')  return buildGeoFeatureQuestions(reservoirs, m);
+    if (m === 'forests')     return buildGeoFeatureQuestions(forests, m);
+    return buildProvinceQuestions(provinces);
+  }, [provinces, districts, cities, mountains, rivers, historical, attractions, reservoirs, forests]);
+
   const handlePlayAgain = useCallback(() => {
-    if (!provinces.length || !districts.length) return;
-    let qs;
-    if (mode === 'provinces')      qs = buildProvinceQuestions(provinces);
-    else if (mode === 'districts') qs = buildDistrictQuestions(districts, provinces);
-    else if (mode === 'capitals')  qs = buildCapitalQuestions(provinces);
-    else                           qs = buildCityQuestions(cities);
-    startGame(mode, difficulty, qs);
-  }, [mode, difficulty, provinces, districts, cities, startGame]);
+    if (!provinces.length) return;
+    startGame(mode, difficulty, buildQuestions(mode));
+  }, [mode, difficulty, buildQuestions, provinces, startGame]);
 
   const handleGoToMenu = () => { goToMenu(); setView('game'); };
 
@@ -116,6 +146,13 @@ export default function App() {
           provinces={provinces}
           districts={districts}
           cities={cities}
+          mountains={mountains}
+          rivers={rivers}
+          historical={historical}
+          attractions={attractions}
+          reservoirs={reservoirs}
+          forests={forests}
+          buildQuestions={buildQuestions}
           onBackToLanding={() => setView('landing')}
         />
       )}
