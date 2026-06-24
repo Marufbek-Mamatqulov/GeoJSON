@@ -18,6 +18,27 @@ export interface Province {
   capitalCoords: [number, number]; // [lng, lat]
   color: string;
   order: number;
+  // Enriched (optional) — populated from provinces.json
+  area?: number;
+  population?: number;
+  founded?: number;
+  districts?: number;
+  funFactUz?: string;
+  funFactRu?: string;
+  funFactEn?: string;
+  majorCitiesUz?: string[];
+  majorCitiesRu?: string[];
+  majorCitiesEn?: string[];
+}
+
+// Province guaranteed to carry enrichment fields.
+export interface ProvinceEnriched extends Province {
+  area: number;
+  population: number;
+  founded: number;
+  districts: number;
+  funFactUz: string;
+  majorCitiesUz: string[];
 }
 
 export interface District {

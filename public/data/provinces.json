@@ -7,12 +7,19 @@
     "capitalUz": "Nukus",
     "capitalRu": "Нукус",
     "capitalEn": "Nukus",
-    "capitalCoords": [
-      59.62,
-      42.45
-    ],
+    "capitalCoords": [59.62, 42.45],
     "color": "#ef4444",
-    "order": 1
+    "order": 1,
+    "area": 166600,
+    "population": 2000000,
+    "founded": 1936,
+    "districts": 16,
+    "funFactUz": "O'zbekistondagi eng katta hudud — maydoni bo'yicha mamlakatning deyarli uchdan birini egallaydi, Orol dengizi shu yerda joylashgan.",
+    "funFactRu": "Самый большой регион Узбекистана, занимает почти треть страны; здесь находится Аральское море.",
+    "funFactEn": "Uzbekistan's largest region, covering nearly a third of the country; home to the Aral Sea.",
+    "majorCitiesUz": ["Nukus", "Beruniy", "Xo'jayli", "To'rtko'l"],
+    "majorCitiesRu": ["Нукус", "Беруни", "Ходжейли", "Турткуль"],
+    "majorCitiesEn": ["Nukus", "Beruniy", "Khojeli", "Turtkul"]
   },
   {
     "id": "khorezm",
@@ -22,12 +29,19 @@
     "capitalUz": "Urganch",
     "capitalRu": "Ургенч",
     "capitalEn": "Urgench",
-    "capitalCoords": [
-      60.64,
-      41.55
-    ],
+    "capitalCoords": [60.64, 41.55],
     "color": "#f97316",
-    "order": 2
+    "order": 2,
+    "area": 6800,
+    "population": 1900000,
+    "founded": 1938,
+    "districts": 10,
+    "funFactUz": "Qadimiy Xorazm tsivilizatsiyasi vatani; Xiva shahri YuNESKO Jahon merosi ro'yxatiga kiritilgan.",
+    "funFactRu": "Родина древней Хорезмской цивилизации; город Хива входит в список Всемирного наследия ЮНЕСКО.",
+    "funFactEn": "Cradle of the ancient Khorezm civilization; the city of Khiva is a UNESCO World Heritage Site.",
+    "majorCitiesUz": ["Urganch", "Xiva", "Hazorasp", "Shovot"],
+    "majorCitiesRu": ["Ургенч", "Хива", "Хазарасп", "Шават"],
+    "majorCitiesEn": ["Urgench", "Khiva", "Hazorasp", "Shovot"]
   },
   {
     "id": "bukhara",
@@ -37,12 +51,19 @@
     "capitalUz": "Buxoro",
     "capitalRu": "Бухара",
     "capitalEn": "Bukhara",
-    "capitalCoords": [
-      64.42,
-      39.78
-    ],
+    "capitalCoords": [64.42, 39.78],
     "color": "#eab308",
-    "order": 3
+    "order": 3,
+    "area": 39400,
+    "population": 1900000,
+    "founded": 1938,
+    "districts": 11,
+    "funFactUz": "Buxoro — 2500 yildan ortiq tarixga ega muqaddas shahar, Buyuk Ipak yo'lining muhim markazi bo'lgan.",
+    "funFactRu": "Бухара — священный город с историей более 2500 лет, важный центр Великого шёлкового пути.",
+    "funFactEn": "Bukhara is a sacred city with over 2,500 years of history, a key hub of the Great Silk Road.",
+    "majorCitiesUz": ["Buxoro", "Kogon", "G'ijduvon", "Vobkent"],
+    "majorCitiesRu": ["Бухара", "Каган", "Гиждуван", "Вабкент"],
+    "majorCitiesEn": ["Bukhara", "Kogon", "Gijduvan", "Vobkent"]
   },
   {
     "id": "navoi",
@@ -52,12 +73,19 @@
     "capitalUz": "Navoiy",
     "capitalRu": "Навои",
     "capitalEn": "Navoi",
-    "capitalCoords": [
-      65.37,
-      40.1
-    ],
+    "capitalCoords": [65.37, 40.1],
     "color": "#84cc16",
-    "order": 4
+    "order": 4,
+    "area": 110800,
+    "population": 1100000,
+    "founded": 1982,
+    "districts": 8,
+    "funFactUz": "Maydoni bo'yicha ikkinchi eng katta viloyat; Qizilqum cho'li va boy oltin konlari shu yerda.",
+    "funFactRu": "Второй по площади регион; здесь расположена пустыня Кызылкум и богатые месторождения золота.",
+    "funFactEn": "The second-largest region by area; home to the Kyzylkum Desert and rich gold deposits.",
+    "majorCitiesUz": ["Navoiy", "Zarafshon", "Uchquduq", "Konimex"],
+    "majorCitiesRu": ["Навои", "Зарафшан", "Учкудук", "Канимех"],
+    "majorCitiesEn": ["Navoi", "Zarafshan", "Uchquduq", "Konimex"]
   },
   {
     "id": "samarkand",
@@ -67,12 +95,19 @@
     "capitalUz": "Samarqand",
     "capitalRu": "Самарканд",
     "capitalEn": "Samarkand",
-    "capitalCoords": [
-      66.97,
-      39.65
-    ],
+    "capitalCoords": [66.97, 39.65],
     "color": "#10b981",
-    "order": 5
+    "order": 5,
+    "area": 16400,
+    "population": 4000000,
+    "founded": 1938,
+    "districts": 14,
+    "funFactUz": "Samarqand — Amir Temur poytaxti, Registon maydoni bilan mashhur eng aholili viloyat.",
+    "funFactRu": "Самарканд — столица Амира Темура, самый населённый регион, известный площадью Регистан.",
+    "funFactEn": "Samarkand was Amir Temur's capital; the most populous region, famed for Registan Square.",
+    "majorCitiesUz": ["Samarqand", "Kattaqo'rg'on", "Urgut", "Bulung'ur"],
+    "majorCitiesRu": ["Самарканд", "Каттакурган", "Ургут", "Булунгур"],
+    "majorCitiesEn": ["Samarkand", "Kattakurgan", "Urgut", "Bulungur"]
   },
   {
     "id": "kashkadarya",
@@ -82,12 +117,19 @@
     "capitalUz": "Qarshi",
     "capitalRu": "Карши",
     "capitalEn": "Karshi",
-    "capitalCoords": [
-      65.79,
-      38.86
-    ],
+    "capitalCoords": [65.79, 38.86],
     "color": "#06b6d4",
-    "order": 6
+    "order": 6,
+    "area": 28400,
+    "population": 3400000,
+    "founded": 1943,
+    "districts": 14,
+    "funFactUz": "Tabiiy gaz qazib olishda yetakchi viloyat; Shahrisabz — Amir Temurning vatani shu yerda.",
+    "funFactRu": "Лидер по добыче природного газа; здесь находится Шахрисабз — родина Амира Темура.",
+    "funFactEn": "A leader in natural gas extraction; home to Shahrisabz, the birthplace of Amir Temur.",
+    "majorCitiesUz": ["Qarshi", "Shahrisabz", "Kitob", "G'uzor"],
+    "majorCitiesRu": ["Карши", "Шахрисабз", "Китаб", "Гузар"],
+    "majorCitiesEn": ["Karshi", "Shahrisabz", "Kitob", "Guzar"]
   },
   {
     "id": "surkhandarya",
@@ -97,12 +139,19 @@
     "capitalUz": "Termiz",
     "capitalRu": "Термез",
     "capitalEn": "Termez",
-    "capitalCoords": [
-      67.27,
-      37.22
-    ],
+    "capitalCoords": [67.27, 37.22],
     "color": "#3b82f6",
-    "order": 7
+    "order": 7,
+    "area": 20800,
+    "population": 2700000,
+    "founded": 1941,
+    "districts": 14,
+    "funFactUz": "O'zbekistonning eng janubiy va eng issiq viloyati; Afg'oniston bilan chegaradosh.",
+    "funFactRu": "Самый южный и жаркий регион Узбекистана, граничит с Афганистаном.",
+    "funFactEn": "Uzbekistan's southernmost and hottest region, bordering Afghanistan.",
+    "majorCitiesUz": ["Termiz", "Denov", "Sho'rchi", "Boysun"],
+    "majorCitiesRu": ["Термез", "Денау", "Шурчи", "Байсун"],
+    "majorCitiesEn": ["Termez", "Denov", "Shurchi", "Boysun"]
   },
   {
     "id": "jizzakh",
@@ -112,12 +161,19 @@
     "capitalUz": "Jizzax",
     "capitalRu": "Джизак",
     "capitalEn": "Jizzakh",
-    "capitalCoords": [
-      67.83,
-      40.12
-    ],
+    "capitalCoords": [67.83, 40.12],
     "color": "#6366f1",
-    "order": 8
+    "order": 8,
+    "area": 20500,
+    "population": 1400000,
+    "founded": 1973,
+    "districts": 12,
+    "funFactUz": "Mirzacho'l dashtlari shu yerda; donchilik va paxtachilikning muhim markazi.",
+    "funFactRu": "Здесь расположена Голодная степь (Мирзачуль); важный центр зерноводства и хлопководства.",
+    "funFactEn": "Home to the Mirzachul (Hungry) Steppe; an important grain and cotton-growing center.",
+    "majorCitiesUz": ["Jizzax", "G'allaorol", "Zomin", "Paxtakor"],
+    "majorCitiesRu": ["Джизак", "Галлаарал", "Заамин", "Пахтакор"],
+    "majorCitiesEn": ["Jizzakh", "Gallaorol", "Zomin", "Paxtakor"]
   },
   {
     "id": "syrdarya",
@@ -127,12 +183,19 @@
     "capitalUz": "Guliston",
     "capitalRu": "Гулистан",
     "capitalEn": "Gulistan",
-    "capitalCoords": [
-      68.78,
-      40.49
-    ],
+    "capitalCoords": [68.78, 40.49],
     "color": "#8b5cf6",
-    "order": 9
+    "order": 9,
+    "area": 5100,
+    "population": 960000,
+    "founded": 1963,
+    "districts": 9,
+    "funFactUz": "Maydoni bo'yicha eng kichik viloyatlardan biri; Sirdaryo daryosi nomi bilan atalgan.",
+    "funFactRu": "Один из самых маленьких регионов по площади; назван в честь реки Сырдарья.",
+    "funFactEn": "One of the smallest regions by area; named after the Syr Darya river.",
+    "majorCitiesUz": ["Guliston", "Yangiyer", "Sirdaryo", "Boyovut"],
+    "majorCitiesRu": ["Гулистан", "Янгиер", "Сырдарья", "Баяут"],
+    "majorCitiesEn": ["Gulistan", "Yangiyer", "Syrdarya", "Boyovut"]
   },
   {
     "id": "tashkent",
@@ -142,12 +205,19 @@
     "capitalUz": "Nurafshon",
     "capitalRu": "Нурафшон",
     "capitalEn": "Nurafshon",
-    "capitalCoords": [
-      69.36,
-      41.05
-    ],
+    "capitalCoords": [69.36, 41.05],
     "color": "#ec4899",
-    "order": 10
+    "order": 10,
+    "area": 15100,
+    "population": 2900000,
+    "founded": 1938,
+    "districts": 15,
+    "funFactUz": "O'zbekistonning iqtisodiy markazi; markazi Nurafshon, sanoati eng rivojlangan hududlardan biri.",
+    "funFactRu": "Экономический центр Узбекистана; административный центр — Нурафшон, один из самых промышленных регионов.",
+    "funFactEn": "The economic center of Uzbekistan; its capital is Nurafshon, one of the most industrialized regions.",
+    "majorCitiesUz": ["Nurafshon", "Angren", "Olmaliq", "Bekobod"],
+    "majorCitiesRu": ["Нурафшон", "Ангрен", "Алмалык", "Бекабад"],
+    "majorCitiesEn": ["Nurafshon", "Angren", "Olmaliq", "Bekobod"]
   },
   {
     "id": "tashkent-city",
@@ -157,12 +227,19 @@
     "capitalUz": "Toshkent",
     "capitalRu": "Ташкент",
     "capitalEn": "Tashkent",
-    "capitalCoords": [
-      69.25,
-      41.3
-    ],
+    "capitalCoords": [69.25, 41.3],
     "color": "#f43f5e",
-    "order": 11
+    "order": 11,
+    "area": 335,
+    "population": 2800000,
+    "founded": 1930,
+    "districts": 12,
+    "funFactUz": "O'zbekiston poytaxti va Markaziy Osiyodagi eng yirik shahar; metroga ega yagona shahar.",
+    "funFactRu": "Столица Узбекистана и крупнейший город Центральной Азии; единственный город с метрополитеном.",
+    "funFactEn": "The capital of Uzbekistan and the largest city in Central Asia; the only city with a metro.",
+    "majorCitiesUz": ["Toshkent"],
+    "majorCitiesRu": ["Ташкент"],
+    "majorCitiesEn": ["Tashkent"]
   },
   {
     "id": "namangan",
@@ -172,12 +249,19 @@
     "capitalUz": "Namangan",
     "capitalRu": "Наманган",
     "capitalEn": "Namangan",
-    "capitalCoords": [
-      71.67,
-      41
-    ],
+    "capitalCoords": [71.67, 41.0],
     "color": "#14b8a6",
-    "order": 12
+    "order": 12,
+    "area": 7900,
+    "population": 2800000,
+    "founded": 1941,
+    "districts": 12,
+    "funFactUz": "Farg'ona vodiysida joylashgan; gullari va bog'dorchiligi bilan mashhur.",
+    "funFactRu": "Расположен в Ферганской долине; славится цветами и садоводством.",
+    "funFactEn": "Located in the Fergana Valley; famous for its flowers and horticulture.",
+    "majorCitiesUz": ["Namangan", "Chust", "Pop", "Kosonsoy"],
+    "majorCitiesRu": ["Наманган", "Чуст", "Поп", "Касансай"],
+    "majorCitiesEn": ["Namangan", "Chust", "Pop", "Kosonsoy"]
   },
   {
     "id": "fergana",
@@ -187,12 +271,19 @@
     "capitalUz": "Farg'ona",
     "capitalRu": "Фергана",
     "capitalEn": "Fergana",
-    "capitalCoords": [
-      71.78,
-      40.38
-    ],
+    "capitalCoords": [71.78, 40.38],
     "color": "#0ea5e9",
-    "order": 13
+    "order": 13,
+    "area": 7100,
+    "population": 3800000,
+    "founded": 1938,
+    "districts": 15,
+    "funFactUz": "Eng zich aholili viloyatlardan biri; Farg'ona vodiysining yuragi, hunarmandchiligi bilan mashhur.",
+    "funFactRu": "Один из самых густонаселённых регионов; сердце Ферганской долины, славится ремёслами.",
+    "funFactEn": "One of the most densely populated regions; the heart of the Fergana Valley, famous for crafts.",
+    "majorCitiesUz": ["Farg'ona", "Qo'qon", "Marg'ilon", "Quvasoy"],
+    "majorCitiesRu": ["Фергана", "Коканд", "Маргилан", "Кувасай"],
+    "majorCitiesEn": ["Fergana", "Kokand", "Margilan", "Quvasoy"]
   },
   {
     "id": "andijan",
@@ -202,11 +293,18 @@
     "capitalUz": "Andijon",
     "capitalRu": "Андижан",
     "capitalEn": "Andijan",
-    "capitalCoords": [
-      72.34,
-      40.78
-    ],
+    "capitalCoords": [72.34, 40.78],
     "color": "#a855f7",
-    "order": 14
+    "order": 14,
+    "area": 4200,
+    "population": 3400000,
+    "founded": 1941,
+    "districts": 14,
+    "funFactUz": "Maydoni eng kichik, biroq eng zich aholili viloyat; Bobur shu yerda tug'ilgan.",
+    "funFactRu": "Самый маленький по площади, но самый густонаселённый регион; здесь родился Бабур.",
+    "funFactEn": "The smallest by area yet most densely populated region; the birthplace of Babur.",
+    "majorCitiesUz": ["Andijon", "Asaka", "Xonobod", "Shahrixon"],
+    "majorCitiesRu": ["Андижан", "Асака", "Ханабад", "Шахрихан"],
+    "majorCitiesEn": ["Andijan", "Asaka", "Khonobod", "Shahrixon"]
   }
 ]
