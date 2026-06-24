@@ -3,6 +3,7 @@ import {
   BarChart3, X, Gamepad2, Target, Flame,
   CheckCircle2, XCircle, Clock, Trash2,
   Map, MapPin, Landmark, Building2,
+  Mountain, Waves, Star, Droplets, Trees,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { loadStats, clearStats } from '../../utils/storage';
@@ -12,11 +13,23 @@ import type { GameMode, Difficulty } from '../../types';
 
 interface Props { onClose: () => void }
 
-const MODES: GameMode[] = ['provinces', 'districts', 'capitals', 'cities'];
+const MODES: GameMode[] = [
+  'provinces', 'districts', 'capitals', 'cities',
+  'mountains', 'rivers', 'historical', 'attractions', 'reservoirs', 'forests',
+];
 const DIFFS: Difficulty[] = ['easy', 'medium', 'hard'];
 
 const MODE_ICONS: Record<GameMode, LucideIcon> = {
-  provinces: Map, districts: MapPin, capitals: Landmark, cities: Building2,
+  provinces:   Map,
+  districts:   MapPin,
+  capitals:    Landmark,
+  cities:      Building2,
+  mountains:   Mountain,
+  rivers:      Waves,
+  historical:  Clock,
+  attractions: Star,
+  reservoirs:  Droplets,
+  forests:     Trees,
 };
 
 const DIFF_LABELS: Record<Difficulty, { label: string; cls: string }> = {
