@@ -117,7 +117,14 @@ export function GamePanel({ provinces }: Props) {
 
         {/* Progress bar */}
         <div className="space-y-1">
-          <div className="h-1.5 bg-slate-800 rounded-full overflow-hidden">
+          <div
+            className="h-1.5 bg-slate-800 rounded-full overflow-hidden"
+            role="progressbar"
+            aria-valuenow={answered}
+            aria-valuemin={0}
+            aria-valuemax={totalQ}
+            aria-label={`${answered} / ${totalQ}`}
+          >
             <div
               className="h-full rounded-full bg-gradient-to-r from-indigo-500 to-violet-500 transition-all duration-500"
               style={{ width: `${(answered / totalQ) * 100}%` }}
@@ -134,7 +141,7 @@ export function GamePanel({ provinces }: Props) {
       </div>
 
       {/* Question / Feedback */}
-      <div className="p-4 flex-1">
+      <div className="p-4 flex-1" role="status" aria-live="polite" aria-atomic="true">
         {!feedback ? (
           <div className="space-y-4 animate-fade-in">
             <p className="text-[10px] text-slate-500 uppercase tracking-widest font-bold flex items-center gap-1.5">

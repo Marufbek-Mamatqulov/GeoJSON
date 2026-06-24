@@ -1,10 +1,10 @@
-import { Trophy, Award, Star, ThumbsUp, TrendingUp, RefreshCw, Home, CheckCircle2, XCircle, Sparkles } from 'lucide-react';
+import { Trophy, Award, Star, ThumbsUp, TrendingUp, RefreshCw, Home, CheckCircle2, XCircle, Sparkles, AlertTriangle, Lightbulb } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useGameStore } from '../../store/gameStore';
 import { useSettingsStore } from '../../store/settingsStore';
 import { loadStats } from '../../utils/storage';
 import { t } from '../../i18n';
-import type { GameMode, Difficulty } from '../../types';
+import type { GameMode, Difficulty, Province } from '../../types';
 
 interface Props {
   onPlayAgain: () => void;
@@ -39,8 +39,8 @@ function getGrade(pct: number): Grade {
   return 'D';
 }
 
-export function ResultModal({ onPlayAgain, onGoToMenu }: Props) {
-  const { score, answers, mode, difficulty, goToMenu } = useGameStore();
+export function ResultModal({ onPlayAgain, onGoToMenu, provinces }: Props) {
+  const { score, answers, questions, mode, difficulty, goToMenu } = useGameStore();
   const handleMenu = () => { if (onGoToMenu) onGoToMenu(); else goToMenu(); };
   const { language } = useSettingsStore();
   const stats = loadStats();
@@ -56,6 +56,21 @@ export function ResultModal({ onPlayAgain, onGoToMenu }: Props) {
   const prevBest    = stats.highScores[mode as GameMode]?.[difficulty as Difficulty] ?? 0;
   const isHighScore = score > 0 && score >= prevBest;
 
+  // ── Wrong-region analysis ──
+  const cap = language.charAt(0).toUpperCase() + language.slice(1);
+  const provMap = new Map<string, Province>(provinces.map(p => [p.id, p]));
+  const qMap = new Map(questions.map(q => [q.id, q]));
+  const mistakes = answers
+    .filter(a => !a.correct)
+    .map(a => qMap.get(a.questionId))
+    .filter((q): q is NonNullable<typeof q> => !!q)
+    .map(q => {
+      const name = q[`targetName${cap}` as 'targetNameUz'];
+      const prov = q.correctProvinceId ? provMap.get(q.correctProvinceId) : undefined;
+      const fact = prov ? ((prov[`funFact${cap}` as 'funFactUz'] ?? prov.funFactUz) as string | undefined) : undefined;
+      return { id: q.id, name, fact };
+    });
+
   return (
     <div className="relative min-h-screen flex flex-col items-center justify-center px-4 py-12 overflow-hidden bg-[#050814]">
 
@@ -64,7 +79,7 @@ export function ResultModal({ onPlayAgain, onGoToMenu }: Props) {
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[300px] bg-indigo-600/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-1/4 w-56 h-56 bg-violet-600/8 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="relative w-full max-w-sm animate-bounce-in">
+      <div className="relative w-full max-w-md animate-bounce-in">
 
         {/* Grade display */}
         <div className="text-center mb-6">
@@ -122,6 +137,32 @@ export function ResultModal({ onPlayAgain, onGoToMenu }: Props) {
             </p>
           </div>
         </div>
+
+        {/* Wrong-region analysis */}
+        {mistakes.length > 0 && (
+          <div className="mb-5">
+            <p className="text-[10px] uppercase tracking-widest font-bold text-rose-400/80 flex items-center gap-1.5 mb-2.5">
+              <AlertTriangle size={12} strokeWidth={2.5} />
+              {t(language, 'mistakesTitle')}
+            </p>
+            <div className="space-y-2 max-h-52 overflow-y-auto pr-1">
+              {mistakes.map(m => (
+                <div key={m.id} className="rounded-2xl bg-slate-800/50 border border-rose-500/15 p-3">
+                  <p className="text-sm font-bold text-slate-200 flex items-center gap-1.5">
+                    <XCircle size={13} className="text-rose-400 shrink-0" strokeWidth={2} />
+                    {m.name}
+                  </p>
+                  {m.fact && (
+                    <p className="text-[11px] text-slate-500 leading-relaxed mt-1.5 flex items-start gap-1.5">
+                      <Lightbulb size={11} className="text-amber-400/70 shrink-0 mt-0.5" strokeWidth={2} />
+                      <span>{m.fact}</span>
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Actions */}
         <div className="space-y-2">

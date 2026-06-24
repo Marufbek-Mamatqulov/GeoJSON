@@ -4,7 +4,7 @@ import {
   ChevronRight, ChevronDown, ArrowRight,
   Trophy, Target, Users, Globe, Layers,
   CheckCircle2, Zap, Star, TrendingUp,
-  MousePointer2, Award, Clock, Shield,
+  MousePointer2, Award, Clock, Shield, BookOpen,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useInView } from '../../hooks/useInView';
@@ -12,6 +12,7 @@ import { useInView } from '../../hooks/useInView';
 interface Props {
   onPlay: () => void;
   onDemographics: () => void;
+  onEncyclopedia: () => void;
 }
 
 // ── Scroll-reveal wrapper ─────────────────────────────────────────────────────
@@ -295,9 +296,9 @@ function StatsStrip() {
   const stats = [
     { target: 208,  suffix: '',   label: 'Tuman/Shahar', Icon: MapPin, color: 'text-indigo-400' },
     { target: 14,   suffix: '',   label: 'Viloyat', Icon: Map,        color: 'text-violet-400' },
-    { target: 36_8, suffix: 'M', label: "Aholi (ming)", Icon: Users,      color: 'text-cyan-400', display: '36.8M' },
+    { target: 10,   suffix: '',   label: "O'yin rejimi", Icon: Layers, color: 'text-cyan-400' },
     { target: 3,    suffix: '',   label: 'Til', Icon: Globe,      color: 'text-emerald-400' },
-    { target: 15,   suffix: '',   label: 'Savol/o\'yin', Icon: Star,       color: 'text-amber-400' },
+    { target: 1,    suffix: '',   label: 'Entsiklopediya', Icon: BookOpen, color: 'text-amber-400' },
   ];
 
   return (
@@ -305,15 +306,15 @@ function StatsStrip() {
       <div className="section-divider" />
       <div className="py-12 px-4">
         <div className="max-w-5xl mx-auto grid grid-cols-3 md:grid-cols-5 gap-6 md:gap-0">
-          {stats.map(({ target, suffix, label, Icon, color, display }, i) => (
+          {stats.map(({ target, suffix, label, Icon, color }, i) => (
             <div key={label} className={`text-center relative ${
               i > 0 && i < stats.length && 'md:border-l border-slate-800/60'
             } md:px-8`}>
               <Icon size={18} className={`${color} mx-auto mb-3 opacity-70`} strokeWidth={1.5} />
               <p className={`text-3xl md:text-4xl font-black ${color} leading-none mb-1.5`}>
                 {inView
-                  ? (display || <Counter target={target} suffix={suffix} />)
-                  : <span className="opacity-0">{display || target}{suffix}</span>}
+                  ? <Counter target={target} suffix={suffix} />
+                  : <span className="opacity-0">{target}{suffix}</span>}
               </p>
               <p className="text-xs text-slate-500 font-semibold tracking-wide uppercase">{label}</p>
             </div>
@@ -451,6 +452,54 @@ function HowItWorksSection() {
               </div>
             </Reveal>
           ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ── ENCYCLOPEDIA PREVIEW ──────────────────────────────────────────────────────
+
+function EncyclopediaSection({ onEncyclopedia }: { onEncyclopedia: () => void }) {
+  return (
+    <section className="py-24 px-4">
+      <div className="max-w-5xl mx-auto">
+        <div className="relative rounded-3xl overflow-hidden border border-emerald-500/15">
+          <div className="absolute inset-0 bg-gradient-to-br from-emerald-600/8 via-teal-600/5 to-cyan-600/4" />
+          <div className="absolute inset-0 dot-grid opacity-20" />
+
+          <div className="relative px-8 md:px-16 py-16 md:py-20 text-center">
+            <Reveal>
+              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-bold
+                bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 uppercase tracking-widest mb-6">
+                <BookOpen size={12} strokeWidth={2.5} />
+                Yangi • Entsiklopediya
+              </span>
+              <h2 className="text-3xl md:text-4xl font-black text-white tracking-tight leading-tight mb-4">
+                Har bir viloyatni
+                {' '}
+                <span className="gradient-text">chuqur o'rganing</span>
+              </h2>
+              <p className="text-slate-400 leading-relaxed mb-8 max-w-xl mx-auto">
+                Aholisi, maydoni, ma'muriy markazi, tashkil etilgan yili, asosiy shaharlari
+                va qiziqarli faktlar — 14 viloyat bo'yicha to'liq ma'lumotlar bir joyda.
+              </p>
+              <button
+                onClick={onEncyclopedia}
+                className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-2xl
+                  font-bold text-white text-sm
+                  bg-gradient-to-r from-emerald-600 to-teal-600
+                  hover:from-emerald-500 hover:to-teal-500
+                  shadow-[0_0_20px_rgba(16,185,129,.25)]
+                  hover:shadow-[0_0_30px_rgba(16,185,129,.4)]
+                  active:scale-[.98] transition-all duration-200 group"
+              >
+                Entsiklopediyani ochish
+                <ArrowRight size={16} strokeWidth={2.5}
+                  className="group-hover:translate-x-1 transition-transform" />
+              </button>
+            </Reveal>
+          </div>
         </div>
       </div>
     </section>
@@ -609,7 +658,7 @@ function CtaSection({ onPlay }: { onPlay: () => void }) {
 
 // ── FOOTER ────────────────────────────────────────────────────────────────────
 
-function LandingFooter({ onPlay, onDemographics }: Props) {
+function LandingFooter({ onPlay, onDemographics, onEncyclopedia }: Props) {
   return (
     <footer className="border-t border-slate-800/60 py-12 px-4">
       <div className="max-w-5xl mx-auto">
@@ -636,6 +685,10 @@ function LandingFooter({ onPlay, onDemographics }: Props) {
               className="text-sm text-slate-500 hover:text-slate-300 transition-colors font-medium">
               O'yin
             </button>
+            <button onClick={onEncyclopedia}
+              className="text-sm text-slate-500 hover:text-slate-300 transition-colors font-medium">
+              Entsiklopediya
+            </button>
             <button onClick={onDemographics}
               className="text-sm text-slate-500 hover:text-slate-300 transition-colors font-medium">
               Demografiya
@@ -653,17 +706,18 @@ function LandingFooter({ onPlay, onDemographics }: Props) {
 
 // ── MAIN EXPORT ───────────────────────────────────────────────────────────────
 
-export function LandingPage({ onPlay, onDemographics }: Props) {
+export function LandingPage({ onPlay, onDemographics, onEncyclopedia }: Props) {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#050814] text-slate-100">
-      <HeroSection onPlay={onPlay} onDemographics={onDemographics} />
+      <HeroSection onPlay={onPlay} onDemographics={onDemographics} onEncyclopedia={onEncyclopedia} />
       <StatsStrip />
       <FeaturesSection onPlay={onPlay} />
       <HowItWorksSection />
+      <EncyclopediaSection onEncyclopedia={onEncyclopedia} />
       <DemographicsSection onDemographics={onDemographics} />
       <TrustBar />
       <CtaSection onPlay={onPlay} />
-      <LandingFooter onPlay={onPlay} onDemographics={onDemographics} />
+      <LandingFooter onPlay={onPlay} onDemographics={onDemographics} onEncyclopedia={onEncyclopedia} />
     </div>
   );
 }
