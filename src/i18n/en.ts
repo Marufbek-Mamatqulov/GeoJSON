@@ -97,6 +97,28 @@ const en = {
   theme: 'Theme',
   light: 'Light',
   dark: 'Dark',
+
+  // Encyclopedia
+  encyclopedia: 'Encyclopedia',
+  encyclopediaSubtitle: 'Learn everything about the regions of Uzbekistan',
+  searchProvince: 'Search a region...',
+  area: 'Area',
+  population: 'Population',
+  capital: 'Capital',
+  founded: 'Founded',
+  districtsCount: 'Districts',
+  funFact: 'Fun fact',
+  majorCities: 'Major cities',
+  findOnMap: 'Find this region',
+  noResults: 'Nothing found',
+  backToList: 'Back to list',
+  km2: 'km²',
+  people: 'people',
+  year: '',
+
+  // Result analysis
+  mistakesTitle: 'Regions to review',
+  mistakesSubtitle: 'Review the following',
 } as const;
 
 export default en;

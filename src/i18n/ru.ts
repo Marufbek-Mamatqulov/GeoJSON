@@ -97,6 +97,28 @@ const ru = {
   theme: 'Тема',
   light: 'Светлая',
   dark: 'Тёмная',
+
+  // Encyclopedia
+  encyclopedia: 'Энциклопедия',
+  encyclopediaSubtitle: 'Узнайте всё о регионах Узбекистана',
+  searchProvince: 'Поиск региона...',
+  area: 'Площадь',
+  population: 'Население',
+  capital: 'Центр',
+  founded: 'Образован',
+  districtsCount: 'Районы',
+  funFact: 'Интересный факт',
+  majorCities: 'Крупные города',
+  findOnMap: 'Найти этот регион',
+  noResults: 'Ничего не найдено',
+  backToList: 'Назад к списку',
+  km2: 'км²',
+  people: 'чел.',
+  year: 'г.',
+
+  // Result analysis
+  mistakesTitle: 'Регионы с ошибками',
+  mistakesSubtitle: 'Повторите следующее',
 } as const;
 
 export default ru;

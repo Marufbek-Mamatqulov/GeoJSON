@@ -106,6 +106,28 @@ const uz = {
   theme: 'Mavzu',
   light: 'Och',
   dark: "To'q",
+
+  // Encyclopedia
+  encyclopedia: 'Entsiklopediya',
+  encyclopediaSubtitle: "O'zbekiston viloyatlari haqida hammasini bilib oling",
+  searchProvince: 'Viloyatni qidiring...',
+  area: 'Maydon',
+  population: 'Aholi',
+  capital: 'Markaz',
+  founded: 'Tashkil etilgan',
+  districtsCount: 'Tumanlar',
+  funFact: 'Qiziqarli fakt',
+  majorCities: 'Asosiy shaharlar',
+  findOnMap: 'Bu viloyatni topish',
+  noResults: 'Hech narsa topilmadi',
+  backToList: "Ro'yxatga qaytish",
+  km2: 'km²',
+  people: 'kishi',
+  year: 'yil',
+
+  // Result analysis
+  mistakesTitle: 'Xato hududlar',
+  mistakesSubtitle: "Quyidagilarni qayta ko'rib chiqing",
 } as const;
 
 export default uz;
