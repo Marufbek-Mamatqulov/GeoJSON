@@ -9,6 +9,7 @@ import { GameMap } from './components/Map/GameMap';
 import { GamePanel } from './components/Game/GamePanel';
 import { ResultModal } from './components/Game/ResultModal';
 import { DemographicsView } from './components/Demographics/DemographicsView';
+import { EncyclopediaView } from './components/Encyclopedia/EncyclopediaView';
 import {
   buildProvinceQuestions, buildDistrictQuestions,
   buildCapitalQuestions, buildCityQuestions,
@@ -16,7 +17,7 @@ import {
 } from './utils/gameLogic';
 import type { Province, District, City, GeoDistrictCollection, GeoFeature, GameMode } from './types';
 
-export type AppView = 'landing' | 'game' | 'demographics';
+export type AppView = 'landing' | 'game' | 'demographics' | 'encyclopedia';
 
 export default function App() {
   const { status, startGame, mode, difficulty, goToMenu } = useGameStore();
@@ -97,6 +98,12 @@ export default function App() {
 
   const handleGoToMenu = () => { goToMenu(); setView('game'); };
 
+  const handlePlayProvinceFromEncyclopedia = useCallback(() => {
+    if (!provinces.length) return;
+    startGame('provinces', difficulty, buildQuestions('provinces'));
+    setView('game');
+  }, [provinces, difficulty, buildQuestions, startGame]);
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#050814]">
@@ -123,6 +130,7 @@ export default function App() {
         <LandingPage
           onPlay={() => setView('game')}
           onDemographics={() => setView('demographics')}
+          onEncyclopedia={() => setView('encyclopedia')}
         />
       </>
     );
@@ -133,6 +141,18 @@ export default function App() {
       <div className="min-h-screen bg-[#050814] text-slate-100">
         <Header view={view} onViewChange={setView} />
         <DemographicsView geoData={geoData} provinces={provinces} />
+      </div>
+    );
+  }
+
+  if (view === 'encyclopedia') {
+    return (
+      <div className="min-h-screen bg-[#050814] text-slate-100">
+        <Header view={view} onViewChange={setView} />
+        <EncyclopediaView
+          provinces={provinces}
+          onPlayProvince={handlePlayProvinceFromEncyclopedia}
+        />
       </div>
     );
   }

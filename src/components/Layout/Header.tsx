@@ -1,7 +1,9 @@
-import { Map, BarChart3, Home } from 'lucide-react';
+import { Map, BarChart3, Home, BookOpen } from 'lucide-react';
 import { useGameStore } from '../../store/gameStore';
+import { useSettingsStore } from '../../store/settingsStore';
 import { LanguageSelector } from '../UI/LanguageSelector';
 import { ThemeToggle } from '../UI/ThemeToggle';
+import { t } from '../../i18n';
 import type { AppView } from '../../App';
 
 interface Props {
@@ -11,6 +13,7 @@ interface Props {
 
 export function Header({ view, onViewChange }: Props) {
   const { status, goToMenu } = useGameStore();
+  const { language } = useSettingsStore();
 
   const handleLogoClick = () => {
     if (view !== 'landing') {
@@ -60,6 +63,17 @@ export function Header({ view, onViewChange }: Props) {
         >
           <Map size={13} strokeWidth={2.5} />
           <span className="hidden sm:inline">O'yin</span>
+        </button>
+        <button
+          onClick={() => onViewChange('encyclopedia')}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold
+            transition-all duration-200
+            ${view === 'encyclopedia'
+              ? 'bg-emerald-600/25 text-emerald-300 border border-emerald-500/25'
+              : 'text-slate-500 hover:text-slate-300 hover:bg-white/4'}`}
+        >
+          <BookOpen size={13} strokeWidth={2.5} />
+          <span className="hidden sm:inline">{t(language, 'encyclopedia')}</span>
         </button>
         <button
           onClick={() => onViewChange('demographics')}
