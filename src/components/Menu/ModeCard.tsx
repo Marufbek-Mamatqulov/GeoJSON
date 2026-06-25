@@ -97,7 +97,8 @@ export function ModeCard({ mode, Icon, title, active, onClick }: Props) {
   return (
     <button
       onClick={onClick}
-      className={`relative w-full flex flex-col items-center justify-center gap-3 p-4 pt-5 pb-4
+      className={`relative w-full flex flex-col items-center justify-center gap-3
+        p-4 pt-5 pb-4 md:p-5 md:pt-6 md:pb-5 lg:p-6 lg:pt-7 lg:pb-6
         rounded-2xl border-2 transition-all duration-300 group overflow-hidden
         ${active
           ? `bg-gradient-to-b ${s.gradient} ${s.glow} scale-[1.02]`
@@ -108,24 +109,24 @@ export function ModeCard({ mode, Icon, title, active, onClick }: Props) {
       {active && <div className="absolute inset-0 shimmer pointer-events-none" />}
 
       {/* Icon box */}
-      <div className={`relative w-12 h-12 rounded-2xl bg-gradient-to-br ${s.iconBg}
+      <div className={`relative w-12 h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 rounded-2xl bg-gradient-to-br ${s.iconBg}
         flex items-center justify-center
         transition-all duration-300
         ${active ? `${s.iconGlow} scale-110` : 'shadow-lg group-hover:scale-105 group-hover:shadow-xl'}`}>
-        <Icon size={22} className="text-white" strokeWidth={2} />
+        <Icon className="w-[22px] h-[22px] md:w-6 md:h-6 lg:w-7 lg:h-7 text-white" strokeWidth={2} />
 
         {/* Active checkmark badge */}
         {active && (
-          <span className="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full
+          <span className="absolute -top-1.5 -right-1.5 w-5 h-5 md:w-6 md:h-6 rounded-full
             bg-white flex items-center justify-center
             shadow-[0_2px_8px_rgba(0,0,0,.3)]">
-            <Check size={11} className={s.textColor.replace('text-', 'text-')} strokeWidth={3.5} />
+            <Check className={`w-[11px] h-[11px] md:w-3 md:h-3 ${s.textColor}`} strokeWidth={3.5} />
           </span>
         )}
       </div>
 
       {/* Title */}
-      <p className={`text-[11px] font-black text-center leading-tight tracking-wide uppercase
+      <p className={`text-[11px] md:text-xs lg:text-sm font-black text-center leading-tight tracking-wide uppercase
         transition-colors duration-200
         ${active ? s.textColor : 'text-slate-400 group-hover:text-slate-200'}`}>
         {title}

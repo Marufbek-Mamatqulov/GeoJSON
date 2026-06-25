@@ -61,10 +61,23 @@ function shuffle<T>(arr: T[]): T[] {
   return a;
 }
 
-const COUNT = 15;
+const DEFAULT_COUNT = 15;
+
+function isCityDistrict(district: District): boolean {
+  const nameEn = district.nameEn.toLowerCase();
+  const nameUz = district.nameUz.toLowerCase();
+  const nameRu = district.nameRu.toLowerCase();
+  return nameEn.includes(' city') || nameEn.endsWith(' city') || nameUz.includes('shahri') || nameRu.includes('г.');
+}
+
+function pickCount(total: number, scopeProvinceId?: string | null, countLimit?: number | null): number {
+  if (scopeProvinceId) return total; // All districts/cities for a specific province
+  if (countLimit) return Math.min(countLimit, total);
+  return Math.min(DEFAULT_COUNT, total);
+}
 
 export function buildProvinceQuestions(provinces: Province[]): Question[] {
-  return shuffle(provinces).slice(0, COUNT).map((p, i) => ({
+  return shuffle(provinces).slice(0, Math.min(DEFAULT_COUNT, provinces.length)).map((p, i) => ({
     id: `q-${i}`,
     type: 'provinces' as GameMode,
     targetId: p.id,
@@ -75,9 +88,15 @@ export function buildProvinceQuestions(provinces: Province[]): Question[] {
   }));
 }
 
-export function buildDistrictQuestions(districts: District[], provinces: Province[]): Question[] {
+export function buildDistrictQuestions(
+  districts: District[],
+  provinces: Province[],
+  scopeProvinceId?: string | null,
+  countLimit?: number | null,
+): Question[] {
   const provMap = Object.fromEntries(provinces.map(p => [p.id, p]));
-  return shuffle(districts).slice(0, COUNT).map((d, i) => ({
+  const filtered = districts.filter(d => !isCityDistrict(d) && (!scopeProvinceId || d.provinceId === scopeProvinceId));
+  return shuffle(filtered).slice(0, pickCount(filtered.length, scopeProvinceId, countLimit)).map((d, i) => ({
     id: `q-${i}`,
     type: 'districts' as GameMode,
     targetId: d.id,
@@ -97,7 +116,7 @@ export function buildDistrictQuestions(districts: District[], provinces: Provinc
 }
 
 export function buildCapitalQuestions(provinces: Province[]): Question[] {
-  return shuffle(provinces).slice(0, COUNT).map((p, i) => ({
+  return shuffle(provinces).slice(0, Math.min(DEFAULT_COUNT, provinces.length)).map((p, i) => ({
     id: `q-${i}`,
     type: 'capitals' as GameMode,
     targetId: p.id,
@@ -109,8 +128,9 @@ export function buildCapitalQuestions(provinces: Province[]): Question[] {
   }));
 }
 
-export function buildCityQuestions(cities: City[]): Question[] {
-  return shuffle(cities).slice(0, COUNT).map((c, i) => ({
+export function buildCityQuestions(cities: City[], scopeProvinceId?: string | null, countLimit?: number | null): Question[] {
+  const filtered = scopeProvinceId ? cities.filter(c => c.province === scopeProvinceId) : cities;
+  return shuffle(filtered).slice(0, pickCount(filtered.length, scopeProvinceId, countLimit)).map((c, i) => ({
     id: `q-${i}`,
     type: 'cities' as GameMode,
     targetId: c.id,
@@ -124,7 +144,7 @@ export function buildCityQuestions(cities: City[]): Question[] {
 // Unified builder for province-click geo-feature modes:
 // mountains, rivers, historical, attractions, reservoirs, forests
 export function buildGeoFeatureQuestions(features: GeoFeature[], mode: GameMode): Question[] {
-  return shuffle(features).slice(0, COUNT).map((f, i) => ({
+  return shuffle(features).slice(0, DEFAULT_COUNT).map((f, i) => ({
     id: `q-${i}`,
     type: mode,
     targetId: f.id,

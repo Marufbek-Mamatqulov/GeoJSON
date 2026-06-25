@@ -10,6 +10,7 @@ import { GamePanel } from './components/Game/GamePanel';
 import { ResultModal } from './components/Game/ResultModal';
 import { DemographicsView } from './components/Demographics/DemographicsView';
 import { EncyclopediaView } from './components/Encyclopedia/EncyclopediaView';
+import { ChatBot } from './components/Chat/ChatBot';
 import {
   buildProvinceQuestions, buildDistrictQuestions,
   buildCapitalQuestions, buildCityQuestions,
@@ -77,11 +78,11 @@ export default function App() {
     }).catch(() => setLoading(false));
   }, []);
 
-  const buildQuestions = useCallback((m: GameMode) => {
+  const buildQuestions = useCallback((m: GameMode, scopeProvinceId?: string | null, countLimit?: number | null) => {
     if (m === 'provinces')   return buildProvinceQuestions(provinces);
-    if (m === 'districts')   return buildDistrictQuestions(districts, provinces);
+    if (m === 'districts')   return buildDistrictQuestions(districts, provinces, scopeProvinceId, countLimit);
     if (m === 'capitals')    return buildCapitalQuestions(provinces);
-    if (m === 'cities')      return buildCityQuestions(cities);
+    if (m === 'cities')      return buildCityQuestions(cities, scopeProvinceId, countLimit);
     if (m === 'mountains')   return buildGeoFeatureQuestions(mountains, m);
     if (m === 'rivers')      return buildGeoFeatureQuestions(rivers, m);
     if (m === 'historical')  return buildGeoFeatureQuestions(historical, m);
@@ -93,7 +94,8 @@ export default function App() {
 
   const handlePlayAgain = useCallback(() => {
     if (!provinces.length) return;
-    startGame(mode, difficulty, buildQuestions(mode));
+    const { scopeProvinceId } = useGameStore.getState();
+    startGame(mode, difficulty, buildQuestions(mode, scopeProvinceId), scopeProvinceId);
   }, [mode, difficulty, buildQuestions, provinces, startGame]);
 
   const handleGoToMenu = () => { goToMenu(); setView('game'); };
@@ -132,6 +134,7 @@ export default function App() {
           onDemographics={() => setView('demographics')}
           onEncyclopedia={() => setView('encyclopedia')}
         />
+        <ChatBot />
       </>
     );
   }
@@ -141,6 +144,7 @@ export default function App() {
       <div className="min-h-screen bg-[#050814] text-slate-100">
         <Header view={view} onViewChange={setView} />
         <DemographicsView geoData={geoData} provinces={provinces} />
+        <ChatBot />
       </div>
     );
   }
@@ -153,6 +157,7 @@ export default function App() {
           provinces={provinces}
           onPlayProvince={handlePlayProvinceFromEncyclopedia}
         />
+        <ChatBot />
       </div>
     );
   }
@@ -198,6 +203,8 @@ export default function App() {
           cities={cities}
         />
       )}
+
+      <ChatBot />
     </div>
   );
 }

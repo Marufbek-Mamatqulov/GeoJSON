@@ -119,6 +119,34 @@ const en = {
   // Result analysis
   mistakesTitle: 'Regions to review',
   mistakesSubtitle: 'Review the following',
+
+  // Game strategy
+  strategyLabel: 'Game style',
+  strategy_seterra: 'Seterra style',
+  strategy_seterra_desc: '3 attempts · Color hints',
+  strategy_worldgeo: 'WorldGeo style',
+  strategy_worldgeo_desc: 'Unlimited attempts · Colored map',
+
+  // Count selector
+  countLabel: 'Number of questions',
+  count_10: '10',
+  count_15: '15',
+  count_20: '20',
+  count_all: 'All',
+
+  // Scope
+  scopeAll: 'All of Uzbekistan',
+
+  // Attempts
+  attemptsLeft: 'Attempt',
+
+  // Chat bot
+  chatTitle: 'Geo Assistant',
+  chatPlaceholder: 'Ask a question...',
+  chatSend: 'Send',
+  chatApiKeyLabel: 'OpenAI API key',
+  chatApiKeySave: 'Save',
+  chatWelcome: 'Hello! I am your Uzbekistan geography assistant. Ask me anything!',
 } as const;
 
 export default en;

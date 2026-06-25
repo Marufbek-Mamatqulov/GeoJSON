@@ -1,7 +1,7 @@
 import {
   Map, MapPin, Landmark, Building2,
   Mountain, Waves, Clock, Star, Droplets, Trees,
-  Heart, CheckCircle2, XCircle, X, Timer,
+  CheckCircle2, XCircle, X, Timer,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useGameStore } from '../../store/gameStore';
@@ -38,27 +38,18 @@ const PROMPT_KEYS: Record<GameMode, Parameters<typeof t>[1]> = {
   forests:     'findForest',
 };
 
-const MAX_LIVES: Record<string, number> = { easy: 5, medium: 3, hard: 2 };
-
-function LivesBar({ lives, max }: { lives: number; max: number }) {
+function LivesIndicator() {
   return (
-    <div className="flex gap-1 items-center">
-      {Array.from({ length: max }).map((_, i) => (
-        <Heart
-          key={i}
-          size={13}
-          strokeWidth={i < lives ? 0 : 1.5}
-          className={i < lives ? 'text-rose-400 fill-rose-400' : 'text-slate-700'}
-        />
-      ))}
-    </div>
+    <span className="inline-flex items-center justify-center min-w-12 px-3 py-1.5 rounded-full border border-emerald-500/20 bg-emerald-500/10 text-emerald-300 text-sm font-black">
+      ∞
+    </span>
   );
 }
 
 export function GamePanel({ provinces }: Props) {
   const {
-    mode, questions, currentIndex, score, lives, timeLeft,
-    feedback, answers, goToMenu, difficulty,
+    mode, questions, currentIndex, score, timeLeft,
+    feedback, answers, goToMenu,
   } = useGameStore();
   const { language } = useSettingsStore();
 
@@ -70,8 +61,6 @@ export function GamePanel({ provinces }: Props) {
   const answered  = answers.length;
   const correct   = answers.filter(a => a.correct).length;
   const wrong     = answered - correct;
-  const maxLives  = MAX_LIVES[difficulty] ?? 3;
-
   const provMap    = Object.fromEntries(provinces.map(p => [p.id, p]));
   const nk         = `name${language.charAt(0).toUpperCase() + language.slice(1)}` as 'nameUz';
   const provinceName = q.provinceId ? (provMap[q.provinceId]?.[nk] ?? q.provinceId) : null;
@@ -111,7 +100,7 @@ export function GamePanel({ provinces }: Props) {
             <p className="text-[10px] text-slate-600 uppercase tracking-widest font-bold mb-1.5">
               {t(language, 'lives')}
             </p>
-            <LivesBar lives={lives} max={maxLives} />
+            <LivesIndicator />
           </div>
         </div>
 

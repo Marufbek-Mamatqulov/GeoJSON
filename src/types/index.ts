@@ -1,6 +1,7 @@
 export type Language = 'uz' | 'ru' | 'en';
 export type Theme = 'light' | 'dark';
 export type Difficulty = 'easy' | 'medium' | 'hard';
+export type GameStrategy = 'seterra' | 'worldgeo';
 export type GameMode =
   | 'provinces' | 'districts' | 'capitals' | 'cities'
   | 'mountains' | 'rivers' | 'historical' | 'attractions' | 'reservoirs' | 'forests';
@@ -93,6 +94,7 @@ export interface AnswerResult {
   timeUsed: number;
   pointsEarned: number;
   distanceKm?: number;
+  attempts?: number;
 }
 
 export interface GameStats {

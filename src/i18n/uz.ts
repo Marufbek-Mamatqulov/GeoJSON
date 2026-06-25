@@ -128,6 +128,34 @@ const uz = {
   // Result analysis
   mistakesTitle: 'Xato hududlar',
   mistakesSubtitle: "Quyidagilarni qayta ko'rib chiqing",
+
+  // Game strategy
+  strategyLabel: "O'yin uslubi",
+  strategy_seterra: 'Seterra uslubi',
+  strategy_seterra_desc: "3 urinish · Rang ko'rsatmalari",
+  strategy_worldgeo: 'WorldGeo uslubi',
+  strategy_worldgeo_desc: "Cheksiz urinish · Rangli xarita",
+
+  // Count selector
+  countLabel: 'Savollar soni',
+  count_10: '10 ta',
+  count_15: '15 ta',
+  count_20: '20 ta',
+  count_all: 'Hammasi',
+
+  // Scope
+  scopeAll: "O'zbekiston bo'yicha",
+
+  // Attempts
+  attemptsLeft: 'Urinish',
+
+  // Chat bot
+  chatTitle: 'Geo Yordamchi',
+  chatPlaceholder: 'Savol bering...',
+  chatSend: 'Yuborish',
+  chatApiKeyLabel: 'OpenAI API kaliti',
+  chatApiKeySave: 'Saqlash',
+  chatWelcome: "Salom! Men O'zbekiston geografiyasi bo'yicha yordamchiman. Savol bering!",
 } as const;
 
 export default uz;

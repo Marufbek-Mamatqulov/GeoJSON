@@ -7,6 +7,7 @@ interface GameState {
   status: GameStatus;
   mode: GameMode;
   difficulty: Difficulty;
+  scopeProvinceId: string | null;
   questions: Question[];
   currentIndex: number;
   score: number;
@@ -19,7 +20,11 @@ interface GameState {
   showStats: boolean;
   currentStreak: number;
 
-  startGame: (mode: GameMode, difficulty: Difficulty, questions: Question[]) => void;
+  // Seterra/WorldGeo strategy state
+  questionAttempts: number;
+  revealedMap: Record<string, 'correct' | 'missed'>;
+
+  startGame: (mode: GameMode, difficulty: Difficulty, questions: Question[], scopeProvinceId?: string | null) => void;
   nextQuestion: () => void;
   addAnswer: (result: AnswerResult) => void;
   setFeedback: (feedback: AnswerFeedback, correctId?: string, wrongId?: string) => void;
@@ -30,19 +35,21 @@ interface GameState {
   endGame: () => void;
   goToMenu: () => void;
   setShowStats: (v: boolean) => void;
+  addAttempt: () => void;
+  revealRegion: (id: string, type: 'correct' | 'missed') => void;
 }
 
-const LIVES: Record<Difficulty, number> = { easy: 5, medium: 3, hard: 2 };
 const TIME: Record<Difficulty, number> = { easy: 45, medium: 30, hard: 15 };
 
 export const useGameStore = create<GameState>((set, get) => ({
   status: 'menu',
   mode: 'provinces',
   difficulty: 'medium',
+  scopeProvinceId: null,
   questions: [],
   currentIndex: 0,
   score: 0,
-  lives: 3,
+  lives: Number.POSITIVE_INFINITY,
   timeLeft: 30,
   answers: [],
   feedback: null,
@@ -50,21 +57,26 @@ export const useGameStore = create<GameState>((set, get) => ({
   highlightWrongId: null,
   showStats: false,
   currentStreak: 0,
+  questionAttempts: 0,
+  revealedMap: {},
 
-  startGame: (mode, difficulty, questions) => set({
+  startGame: (mode, difficulty, questions, scopeProvinceId = null) => set({
     status: 'playing',
     mode,
     difficulty,
+    scopeProvinceId,
     questions,
     currentIndex: 0,
     score: 0,
-    lives: LIVES[difficulty],
+    lives: Number.POSITIVE_INFINITY,
     timeLeft: TIME[difficulty],
     answers: [],
     feedback: null,
     highlightCorrectId: null,
     highlightWrongId: null,
     currentStreak: 0,
+    questionAttempts: 0,
+    revealedMap: {},
   }),
 
   nextQuestion: () => {
@@ -78,6 +90,7 @@ export const useGameStore = create<GameState>((set, get) => ({
         feedback: null,
         highlightCorrectId: null,
         highlightWrongId: null,
+        questionAttempts: 0,
       });
     }
   },
@@ -107,16 +120,22 @@ export const useGameStore = create<GameState>((set, get) => ({
     if (timeLeft > 0) set({ timeLeft: timeLeft - 1 });
   },
 
-  loseLife: () => {
-    const { lives } = get();
-    if (lives <= 1) {
-      set({ lives: 0, status: 'results' });
-    } else {
-      set({ lives: lives - 1 });
-    }
-  },
+  loseLife: () => {},
 
   endGame: () => set({ status: 'results' }),
-  goToMenu: () => set({ status: 'menu', feedback: null, highlightCorrectId: null, highlightWrongId: null }),
+  goToMenu: () => set({
+    status: 'menu',
+    scopeProvinceId: null,
+    feedback: null,
+    highlightCorrectId: null,
+    highlightWrongId: null,
+    questionAttempts: 0,
+    revealedMap: {},
+  }),
   setShowStats: (showStats) => set({ showStats }),
+
+  addAttempt: () => set((s) => ({ questionAttempts: s.questionAttempts + 1 })),
+  revealRegion: (id, type) => set((s) => ({
+    revealedMap: { ...s.revealedMap, [id]: type },
+  })),
 }));

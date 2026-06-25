@@ -119,6 +119,34 @@ const ru = {
   // Result analysis
   mistakesTitle: 'Регионы с ошибками',
   mistakesSubtitle: 'Повторите следующее',
+
+  // Game strategy
+  strategyLabel: 'Стиль игры',
+  strategy_seterra: 'Стиль Seterra',
+  strategy_seterra_desc: '3 попытки · Цветовые подсказки',
+  strategy_worldgeo: 'Стиль WorldGeo',
+  strategy_worldgeo_desc: 'Безлимитные попытки · Цветная карта',
+
+  // Count selector
+  countLabel: 'Количество вопросов',
+  count_10: '10 шт',
+  count_15: '15 шт',
+  count_20: '20 шт',
+  count_all: 'Все',
+
+  // Scope
+  scopeAll: 'По всему Узбекистану',
+
+  // Attempts
+  attemptsLeft: 'Попытка',
+
+  // Chat bot
+  chatTitle: 'Гео Помощник',
+  chatPlaceholder: 'Задайте вопрос...',
+  chatSend: 'Отправить',
+  chatApiKeyLabel: 'Ключ OpenAI API',
+  chatApiKeySave: 'Сохранить',
+  chatWelcome: 'Здравствуйте! Я помощник по географии Узбекистана. Задайте вопрос!',
 } as const;
 
 export default ru;
