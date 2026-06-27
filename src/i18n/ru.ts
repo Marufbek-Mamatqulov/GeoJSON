@@ -140,6 +140,22 @@ const ru = {
   // Attempts
   attemptsLeft: 'Попытка',
 
+  // Weather
+  currentWeather: 'Текущая погода',
+  loading: 'Загрузка...',
+  kmh: 'км/ч',
+  weatherUnavailable: 'Данные о погоде недоступны',
+
+  // Wikipedia
+  wikiDesc: 'Краткое описание',
+
+  // 360 tour
+  virtualTour: '360° Виртуальный тур',
+  virtualTourDesc: 'Исследуйте улицы города в формате 360°',
+
+  // Source
+  sourceLabel: 'Источник',
+
   // Chat bot
   chatTitle: 'Гео Помощник',
   chatPlaceholder: 'Задайте вопрос...',

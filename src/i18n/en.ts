@@ -140,6 +140,22 @@ const en = {
   // Attempts
   attemptsLeft: 'Attempt',
 
+  // Weather
+  currentWeather: 'Current weather',
+  loading: 'Loading...',
+  kmh: 'km/h',
+  weatherUnavailable: 'Weather data unavailable',
+
+  // Wikipedia
+  wikiDesc: 'Brief description',
+
+  // 360 tour
+  virtualTour: '360° Virtual Tour',
+  virtualTourDesc: 'Explore city streets in 360° format',
+
+  // Source
+  sourceLabel: 'Source',
+
   // Chat bot
   chatTitle: 'Geo Assistant',
   chatPlaceholder: 'Ask a question...',

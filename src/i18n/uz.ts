@@ -149,6 +149,22 @@ const uz = {
   // Attempts
   attemptsLeft: 'Urinish',
 
+  // Weather
+  currentWeather: "Hozirgi ob-havo",
+  loading: 'Yuklanmoqda...',
+  kmh: 'km/soat',
+  weatherUnavailable: "Ob-havo ma'lumoti mavjud emas",
+
+  // Wikipedia
+  wikiDesc: "Qisqacha ma'lumot",
+
+  // 360 tour
+  virtualTour: '360° Virtual sayohat',
+  virtualTourDesc: "Shahar ko'chalarini 360° formatda ko'ring",
+
+  // Source
+  sourceLabel: 'Manba',
+
   // Chat bot
   chatTitle: 'Geo Yordamchi',
   chatPlaceholder: 'Savol bering...',

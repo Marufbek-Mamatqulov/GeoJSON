@@ -10,6 +10,7 @@ import { GamePanel } from './components/Game/GamePanel';
 import { ResultModal } from './components/Game/ResultModal';
 import { DemographicsView } from './components/Demographics/DemographicsView';
 import { EncyclopediaView } from './components/Encyclopedia/EncyclopediaView';
+import { Tour360View } from './components/Tour360/Tour360View';
 import { ChatBot } from './components/Chat/ChatBot';
 import {
   buildProvinceQuestions, buildDistrictQuestions,
@@ -18,7 +19,7 @@ import {
 } from './utils/gameLogic';
 import type { Province, District, City, GeoDistrictCollection, GeoFeature, GameMode } from './types';
 
-export type AppView = 'landing' | 'game' | 'demographics' | 'encyclopedia';
+export type AppView = 'landing' | 'game' | 'demographics' | 'encyclopedia' | 'tour360';
 
 export default function App() {
   const { status, startGame, mode, difficulty, goToMenu } = useGameStore();
@@ -157,6 +158,16 @@ export default function App() {
           provinces={provinces}
           onPlayProvince={handlePlayProvinceFromEncyclopedia}
         />
+        <ChatBot />
+      </div>
+    );
+  }
+
+  if (view === 'tour360') {
+    return (
+      <div className="min-h-screen bg-[#050814] text-slate-100">
+        <Header view={view} onViewChange={setView} />
+        <Tour360View />
         <ChatBot />
       </div>
     );

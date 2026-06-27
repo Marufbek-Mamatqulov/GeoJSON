@@ -1,4 +1,4 @@
-import { Map, BarChart3, Home, BookOpen } from 'lucide-react';
+import { Map, BarChart3, Home, BookOpen, Globe } from 'lucide-react';
 import { useGameStore } from '../../store/gameStore';
 import { useSettingsStore } from '../../store/settingsStore';
 import { LanguageSelector } from '../UI/LanguageSelector';
@@ -85,6 +85,17 @@ export function Header({ view, onViewChange }: Props) {
         >
           <BarChart3 size={13} strokeWidth={2.5} />
           <span className="hidden sm:inline">Demografiya</span>
+        </button>
+        <button
+          onClick={() => onViewChange('tour360')}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold
+            transition-all duration-200
+            ${view === 'tour360'
+              ? 'bg-violet-600/25 text-violet-300 border border-violet-500/25'
+              : 'text-slate-500 hover:text-slate-300 hover:bg-white/4'}`}
+        >
+          <Globe size={13} strokeWidth={2.5} />
+          <span className="hidden sm:inline">360°</span>
         </button>
       </nav>
 
