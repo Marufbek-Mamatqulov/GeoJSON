@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageCircle, X, Send, Bot, User, Loader2, AlertCircle } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, User, Loader2 } from 'lucide-react';
 import { useSettingsStore } from '../../store/settingsStore';
 import { t } from '../../i18n';
 
@@ -7,25 +7,6 @@ interface Message {
   role: 'user' | 'assistant';
   content: string;
 }
-
-const API_KEY = import.meta.env.VITE_OPENAI_API_KEY as string | undefined;
-
-const SYSTEM_PROMPT = `Siz O'zbekiston geografiyasi bo'yicha mutaxassis va o'quv yordamchisiz.
-GeoO'yin veb-ilovasi orqali foydalanuvchilarga O'zbekiston haqida ma'lumot berasiz.
-
-Bilimlar:
-- O'zbekiston 14 ta viloyat va Qoraqalpog'iston Respublikasidan iborat
-- Viloyatlar: Toshkent sh., Toshkent vil., Samarqand, Farg'ona, Namangan, Andijon, Qashqadaryo, Surxondaryo, Buxoro, Navoiy, Xorazm, Jizzax, Sirdaryo, Qoraqalpog'iston
-- Maydoni: 448 978 km², Aholisi: ~36 million
-- Poytaxt: Toshkent shahri
-- Rasmiy til: O'zbek tili, Pul birligi: So'm
-- Muhim shaharlar: Toshkent, Samarqand, Namangan, Andijon, Farg'ona, Buxoro, Qarshi, Urganch, Nukus, Termiz
-- Tarixiy joylar: Samarqand (Registon, Shohizinda, Guri Mir), Buxoro (Ark qal'asi, Kalon minorasi), Xiva (Ichan Qal'a)
-- Daryolar: Amudaryo, Sirdaryo, Zarafshon, Qashqadaryo, Surxondaryo
-- Tog'lar: Tyan-Shan, Pomir-Oloy, Hisor, Zarafshon, Turkiston tog' tizimlari
-- Iqtisodiyot: Paxta, gaz, oltin, mis, ximiya sanoati
-
-Qisqa, aniq va foydali javoblar bering. Foydalanuvchi so'ragan tilda javob bering (o'zbek, rus yoki ingliz).`;
 
 export function ChatBot() {
   const { language } = useSettingsStore();
@@ -49,7 +30,7 @@ export function ChatBot() {
 
   const sendMessage = useCallback(async () => {
     const text = input.trim();
-    if (!text || loading || !API_KEY) return;
+    if (!text || loading) return;
 
     const userMsg: Message = { role: 'user', content: text };
     setMessages(prev => [...prev, userMsg]);
@@ -57,21 +38,14 @@ export function ChatBot() {
     setLoading(true);
 
     try {
-      const res = await fetch('https://api.openai.com/v1/chat/completions', {
+      const res = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${API_KEY}`,
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'gpt-4o-mini',
           messages: [
-            { role: 'system', content: SYSTEM_PROMPT },
             ...messages.map(m => ({ role: m.role, content: m.content })),
             { role: 'user', content: text },
           ],
-          max_tokens: 500,
-          temperature: 0.7,
         }),
       });
 
@@ -94,8 +68,6 @@ export function ChatBot() {
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   };
-
-  if (!API_KEY) return null;
 
   return (
     <>
@@ -208,13 +180,3 @@ export function ChatBot() {
   );
 }
 
-export function ChatBotMissing() {
-  return (
-    <div className="fixed bottom-5 right-5 z-50 flex items-center gap-2
-      bg-slate-800/80 border border-slate-700/50 rounded-2xl px-4 py-3
-      shadow-xl text-xs text-slate-400">
-      <AlertCircle size={14} className="text-amber-400 flex-shrink-0" strokeWidth={2} />
-      <span>VITE_OPENAI_API_KEY not set</span>
-    </div>
-  );
-}
