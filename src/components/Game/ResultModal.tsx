@@ -1,4 +1,4 @@
-import { Trophy, Award, Star, ThumbsUp, TrendingUp, RefreshCw, Home, CheckCircle2, XCircle, Sparkles, AlertTriangle, Lightbulb } from 'lucide-react';
+import { Trophy, Award, Star, ThumbsUp, TrendingUp, RefreshCw, Home, CheckCircle2, XCircle, Sparkles, AlertTriangle, Lightbulb, RotateCcw } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useGameStore } from '../../store/gameStore';
 import { useSettingsStore } from '../../store/settingsStore';
@@ -9,6 +9,7 @@ import type { GameMode, Difficulty, Province } from '../../types';
 interface Props {
   onPlayAgain: () => void;
   onGoToMenu?: () => void;
+  onRetryWrong?: () => void;
   provinces: import('../../types').Province[];
   districts: import('../../types').District[];
   cities: import('../../types').City[];
@@ -39,7 +40,7 @@ function getGrade(pct: number): Grade {
   return 'D';
 }
 
-export function ResultModal({ onPlayAgain, onGoToMenu, provinces }: Props) {
+export function ResultModal({ onPlayAgain, onGoToMenu, onRetryWrong, provinces }: Props) {
   const { score, answers, questions, mode, difficulty, goToMenu } = useGameStore();
   const handleMenu = () => { if (onGoToMenu) onGoToMenu(); else goToMenu(); };
   const { language } = useSettingsStore();
@@ -180,6 +181,23 @@ export function ResultModal({ onPlayAgain, onGoToMenu, provinces }: Props) {
             </span>
             <div className="absolute inset-0 bg-white/10 -translate-x-full group-hover:translate-x-full transition-transform duration-700 skew-x-12" />
           </button>
+
+          {wrong > 0 && onRetryWrong && (
+            <button
+              onClick={onRetryWrong}
+              className="w-full py-3.5 rounded-2xl font-bold text-sm text-rose-300 relative overflow-hidden group
+                border border-rose-500/35 bg-rose-500/8
+                hover:bg-rose-500/15 hover:border-rose-500/50
+                active:scale-[.98] transition-all duration-200
+                flex items-center justify-center gap-2"
+            >
+              <RotateCcw size={15} strokeWidth={2.5} />
+              <span>{t(language, 'retryWrong')}</span>
+              <span className="ml-1 px-1.5 py-0.5 rounded-full bg-rose-500/20 text-[11px] font-black text-rose-400">
+                {wrong}
+              </span>
+            </button>
+          )}
 
           <button
             onClick={handleMenu}

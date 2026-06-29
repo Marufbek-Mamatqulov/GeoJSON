@@ -101,6 +101,16 @@ export default function App() {
 
   const handleGoToMenu = () => { goToMenu(); setView('game'); };
 
+  const handleRetryWrong = useCallback(() => {
+    const { answers, questions, mode: m, difficulty: diff, scopeProvinceId } = useGameStore.getState();
+    const wrongIds = new Set(answers.filter(a => !a.correct).map(a => a.questionId));
+    const wrongQuestions = questions
+      .filter(q => wrongIds.has(q.id))
+      .map((q, i) => ({ ...q, id: `retry-${i}` }));
+    if (wrongQuestions.length === 0) return;
+    startGame(m, diff, wrongQuestions, scopeProvinceId);
+  }, [startGame]);
+
   const handlePlayProvinceFromEncyclopedia = useCallback(() => {
     if (!provinces.length) return;
     startGame('provinces', difficulty, buildQuestions('provinces'));
@@ -209,6 +219,7 @@ export default function App() {
         <ResultModal
           onPlayAgain={handlePlayAgain}
           onGoToMenu={handleGoToMenu}
+          onRetryWrong={handleRetryWrong}
           provinces={provinces}
           districts={districts}
           cities={cities}

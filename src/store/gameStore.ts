@@ -22,7 +22,7 @@ interface GameState {
 
   // Seterra/WorldGeo strategy state
   questionAttempts: number;
-  revealedMap: Record<string, 'correct' | 'missed'>;
+  revealedMap: Record<string, 'found_1' | 'found_2' | 'found_3' | 'missed'>;
 
   startGame: (mode: GameMode, difficulty: Difficulty, questions: Question[], scopeProvinceId?: string | null) => void;
   nextQuestion: () => void;
@@ -36,7 +36,7 @@ interface GameState {
   goToMenu: () => void;
   setShowStats: (v: boolean) => void;
   addAttempt: () => void;
-  revealRegion: (id: string, type: 'correct' | 'missed') => void;
+  revealRegion: (id: string, type: 'found_1' | 'found_2' | 'found_3' | 'missed') => void;
 }
 
 const TIME: Record<Difficulty, number> = { easy: 45, medium: 30, hard: 15 };

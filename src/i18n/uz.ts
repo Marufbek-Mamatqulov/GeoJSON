@@ -11,9 +11,9 @@ const uz = {
   back: 'Orqaga',
 
   // Mode categories
-  cat_geography: 'Asosiy geografiya',
-  cat_nature: 'Tabiat',
-  cat_culture: 'Tarix va madaniyat',
+  cat_geography: 'IQTISODIY VA IJTIMOIY GEOGRAFIYA',
+  cat_nature: 'TABIIY GEOGRAFIYA',
+  cat_culture: 'TARIX VA MADANIYAT',
 
   // Game modes — basic
   mode_provinces: 'Viloyatlarni topish',
@@ -164,6 +164,9 @@ const uz = {
 
   // Source
   sourceLabel: 'Manba',
+
+  // Retry wrong answers
+  retryWrong: "Xatolarni qayta o'ynash",
 
   // Chat bot
   chatTitle: 'Geo Yordamchi',

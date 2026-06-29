@@ -105,30 +105,34 @@ export function GameMap({ geoData, provinces, cities }: Props) {
     const { id, provinceId } = feature.properties;
 
     if (isProvClickMode) {
-      // Revealed (correct find or auto-reveal)
+      // Revealed (correct find or auto-reveal) — Seterra color scheme
       const revealed = revealedMap[provinceId];
-      if (revealed === 'correct')
-        return { fillColor: '#22c55e', color: '#16a34a', weight: 1, fillOpacity: 0.75, opacity: 1 };
-      if (revealed === 'missed')
-        return { fillColor: '#f59e0b', color: '#d97706', weight: 1, fillOpacity: 0.65, opacity: 1 };
+      if (revealed === 'found_1') // found on 1st attempt → green
+        return { fillColor: '#22c55e', color: '#16a34a', weight: 1, fillOpacity: 0.80, opacity: 1 };
+      if (revealed === 'found_2') // found on 2nd attempt → blue
+        return { fillColor: '#3b82f6', color: '#2563eb', weight: 1, fillOpacity: 0.80, opacity: 1 };
+      if (revealed === 'found_3') // found on 3rd attempt → yellow
+        return { fillColor: '#eab308', color: '#ca8a04', weight: 1, fillOpacity: 0.80, opacity: 1 };
+      if (revealed === 'missed')  // auto-revealed → red
+        return { fillColor: '#ef4444', color: '#dc2626', weight: 1, fillOpacity: 0.75, opacity: 1 };
 
       // Feedback highlight
       if (highlightCorrectId && provinceId === highlightCorrectId)
-        return { fillColor: '#22c55e', color: '#16a34a', weight: 0, fillOpacity: 0.75, opacity: 1 };
+        return { fillColor: '#22c55e', color: '#16a34a', weight: 0, fillOpacity: 0.80, opacity: 1 };
       if (highlightWrongId && id === highlightWrongId) {
         const isRed = questionAttempts >= 2;
         return isRed
-          ? { fillColor: '#ef4444', color: '#dc2626', weight: 0, fillOpacity: 0.65, opacity: 1 }
-          : { fillColor: '#eab308', color: '#ca8a04', weight: 0, fillOpacity: 0.65, opacity: 1 };
+          ? { fillColor: '#ef4444', color: '#dc2626', weight: 0, fillOpacity: 0.70, opacity: 1 }
+          : { fillColor: '#eab308', color: '#ca8a04', weight: 0, fillOpacity: 0.70, opacity: 1 };
       }
 
       if (gameStrategy === 'seterra') {
-        // Neutral gray — provinces not yet found
-        return { fillColor: '#334155', color: '#334155', weight: 0, fillOpacity: 0.45, opacity: 1 };
+        // Seterra: white initial — no district borders visible within provinces
+        return { fillColor: '#f1f5f9', color: '#f1f5f9', weight: 0, fillOpacity: 0.82, opacity: 0 };
       }
-      // WorldGeo — province colors always shown
+      // WorldGeo — province colors, no internal district borders
       const base = provColors[provinceId] ?? '#94a3b8';
-      return { fillColor: base, color: base, weight: 0, fillOpacity: 0.6, opacity: 1 };
+      return { fillColor: base, color: base, weight: 0, fillOpacity: 0.65, opacity: 0 };
     }
 
     if (mode === 'districts') {
@@ -136,10 +140,14 @@ export function GameMap({ geoData, provinces, cities }: Props) {
         return { fillColor: 'transparent', color: 'transparent', weight: 0, fillOpacity: 0, opacity: 0 };
 
       const revealed = revealedMap[id];
-      if (revealed === 'correct')
-        return { fillColor: '#22c55e', color: '#16a34a', weight: 2.5, fillOpacity: 0.75, opacity: 1 };
+      if (revealed === 'found_1')
+        return { fillColor: '#22c55e', color: '#16a34a', weight: 2, fillOpacity: 0.80, opacity: 1 };
+      if (revealed === 'found_2')
+        return { fillColor: '#3b82f6', color: '#2563eb', weight: 2, fillOpacity: 0.80, opacity: 1 };
+      if (revealed === 'found_3')
+        return { fillColor: '#eab308', color: '#ca8a04', weight: 2, fillOpacity: 0.80, opacity: 1 };
       if (revealed === 'missed')
-        return { fillColor: '#f59e0b', color: '#d97706', weight: 2, fillOpacity: 0.65, opacity: 1 };
+        return { fillColor: '#ef4444', color: '#dc2626', weight: 2, fillOpacity: 0.75, opacity: 1 };
 
       if (highlightCorrectId && id === highlightCorrectId)
         return { fillColor: '#22c55e', color: '#16a34a', weight: 2.5, fillOpacity: 0.75, opacity: 1 };
@@ -238,8 +246,8 @@ export function GameMap({ geoData, provinces, cities }: Props) {
     return cities.map(city => {
       const icon = L.divIcon({
         className: '',
-        html: `<div style="width:8px;height:8px;border-radius:50%;background:${dotColor};border:2px solid white;box-shadow:0 1px 3px rgba(0,0,0,0.3)"></div>`,
-        iconSize: [8, 8], iconAnchor: [4, 4],
+        html: `<div style="width:14px;height:14px;border-radius:50%;background:${dotColor};border:2.5px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.4)"></div>`,
+        iconSize: [14, 14], iconAnchor: [7, 7],
       });
       return <Marker key={city.id} position={[city.coords[1], city.coords[0]]} icon={icon} />;
     });

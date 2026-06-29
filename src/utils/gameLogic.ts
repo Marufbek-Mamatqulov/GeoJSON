@@ -72,7 +72,8 @@ function isCityDistrict(district: District): boolean {
 
 function pickCount(total: number, scopeProvinceId?: string | null, countLimit?: number | null): number {
   if (scopeProvinceId) return total; // All districts/cities for a specific province
-  if (countLimit) return Math.min(countLimit, total);
+  if (countLimit === null) return total; // "Hammasi" — no cap
+  if (countLimit !== undefined) return Math.min(countLimit, total);
   return Math.min(DEFAULT_COUNT, total);
 }
 

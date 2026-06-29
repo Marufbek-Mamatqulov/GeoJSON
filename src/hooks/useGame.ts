@@ -101,7 +101,8 @@ export function useGame() {
       clearTimer();
       const points = calcPolygonScore(true, timeLeft, TOTAL_TIME[difficulty], difficulty);
       game.addAnswer({ questionId: q.id, correct: true, timeUsed, pointsEarned: points, attempts: questionAttempts + 1 });
-      game.revealRegion(q.correctProvinceId!, 'correct');
+      const foundType = questionAttempts === 0 ? 'found_1' as const : questionAttempts === 1 ? 'found_2' as const : 'found_3' as const;
+      game.revealRegion(q.correctProvinceId!, foundType);
       game.setFeedback('correct', q.correctProvinceId ?? undefined, undefined);
       setTimeout(() => { game.clearFeedback(); advance(); }, 1200);
       return;
@@ -161,7 +162,8 @@ export function useGame() {
       clearTimer();
       const points = calcPolygonScore(true, timeLeft, TOTAL_TIME[difficulty], difficulty);
       game.addAnswer({ questionId: q.id, correct: true, timeUsed, pointsEarned: points, attempts: questionAttempts + 1 });
-      game.revealRegion(q.correctDistrictId!, 'correct');
+      const foundType = questionAttempts === 0 ? 'found_1' as const : questionAttempts === 1 ? 'found_2' as const : 'found_3' as const;
+      game.revealRegion(q.correctDistrictId!, foundType);
       game.setFeedback('correct', q.correctDistrictId ?? undefined, undefined);
       setTimeout(() => { game.clearFeedback(); advance(); }, 1200);
       return;
@@ -202,21 +204,14 @@ export function useGame() {
     }
   }, [game, difficulty, advance]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Location click (capitals / cities)
+  // Location click (capitals / cities) — supports retries like province/district clicks
   const handleLocationClick = useCallback((lat: number, lng: number) => {
     if (waitingRef.current || feedbackRef.current || game.status !== 'playing') return;
-    waitingRef.current = true;
-    feedbackRef.current = true;
-    clearTimer();
 
-    const { questions, currentIndex, timeLeft } = useGameStore.getState();
+    const { questions, currentIndex, timeLeft, questionAttempts } = useGameStore.getState();
+    const { gameStrategy } = useSettingsStore.getState();
     const q = questions[currentIndex];
-    if (!q.coords) {
-      waitingRef.current = false;
-      feedbackRef.current = false;
-      advance();
-      return;
-    }
+    if (!q.coords) { advance(); return; }
 
     const [tLng, tLat] = q.coords;
     const dist = haversineKm(lat, lng, tLat, tLng);
@@ -224,18 +219,45 @@ export function useGame() {
     const timeUsed = TOTAL_TIME[difficulty] - timeLeft;
     const points = calcProximityScore(dist, timeLeft, TOTAL_TIME[difficulty], difficulty);
 
-    game.addAnswer({
-      questionId: q.id, correct, timeUsed,
-      pointsEarned: correct ? points : 0,
-      distanceKm: Math.round(dist),
-    });
-    if (correct && q.correctProvinceId) game.revealRegion(q.correctProvinceId, 'correct');
-    game.setFeedback(
-      correct ? 'correct' : 'wrong',
-      q.correctProvinceId || q.targetId,
-      undefined,
-    );
-    setTimeout(() => { game.clearFeedback(); advance(); }, correct ? 1500 : 2500);
+    if (correct) {
+      waitingRef.current = true;
+      feedbackRef.current = true;
+      clearTimer();
+      const foundType = questionAttempts === 0 ? 'found_1' as const : questionAttempts === 1 ? 'found_2' as const : 'found_3' as const;
+      game.addAnswer({ questionId: q.id, correct: true, timeUsed, pointsEarned: points, distanceKm: Math.round(dist) });
+      if (q.correctProvinceId) game.revealRegion(q.correctProvinceId, foundType);
+      game.setFeedback('correct', q.correctProvinceId || q.targetId, undefined);
+      setTimeout(() => { game.clearFeedback(); advance(); }, 1500);
+      return;
+    }
+
+    // Wrong click
+    if (gameStrategy === 'seterra') {
+      const newAttempts = questionAttempts + 1;
+      game.addAttempt();
+      if (newAttempts >= MAX_ATTEMPTS) {
+        waitingRef.current = true;
+        feedbackRef.current = true;
+        clearTimer();
+        game.addAnswer({ questionId: q.id, correct: false, timeUsed, pointsEarned: 0, distanceKm: Math.round(dist) });
+        if (q.correctProvinceId) game.revealRegion(q.correctProvinceId, 'missed');
+        game.setFeedback('wrong', q.correctProvinceId || q.targetId, undefined);
+        setTimeout(() => { game.clearFeedback(); advance(); }, 2500);
+      } else {
+        feedbackRef.current = true;
+        game.setFeedback('wrong', undefined, undefined);
+        setTimeout(() => {
+          if (!waitingRef.current) { game.clearFeedback(); feedbackRef.current = false; }
+        }, 900);
+      }
+    } else {
+      // WorldGeo — unlimited attempts, brief flash
+      feedbackRef.current = true;
+      game.setFeedback('wrong', undefined, undefined);
+      setTimeout(() => {
+        if (!waitingRef.current) { game.clearFeedback(); feedbackRef.current = false; }
+      }, 700);
+    }
   }, [game, difficulty, advance]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return { handleProvinceClick, handleDistrictClick, handleLocationClick };

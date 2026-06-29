@@ -9,9 +9,9 @@ const en = {
   settings: 'Settings',
   back: 'Back',
 
-  cat_geography: 'Core Geography',
-  cat_nature: 'Nature',
-  cat_culture: 'History & Culture',
+  cat_geography: 'ECONOMIC & SOCIAL GEOGRAPHY',
+  cat_nature: 'PHYSICAL GEOGRAPHY',
+  cat_culture: 'HISTORY & CULTURE',
 
   mode_provinces: 'Find Provinces',
   mode_provinces_desc: 'Find the named province on the map',
@@ -155,6 +155,9 @@ const en = {
 
   // Source
   sourceLabel: 'Source',
+
+  // Retry wrong answers
+  retryWrong: 'Replay wrong answers',
 
   // Chat bot
   chatTitle: 'Geo Assistant',

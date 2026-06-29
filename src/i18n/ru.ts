@@ -9,9 +9,9 @@ const ru = {
   settings: 'Настройки',
   back: 'Назад',
 
-  cat_geography: 'Основная география',
-  cat_nature: 'Природа',
-  cat_culture: 'История и культура',
+  cat_geography: 'ЭКОНОМИЧЕСКАЯ И СОЦИАЛЬНАЯ ГЕОГРАФИЯ',
+  cat_nature: 'ФИЗИЧЕСКАЯ ГЕОГРАФИЯ',
+  cat_culture: 'ИСТОРИЯ И КУЛЬТУРА',
 
   mode_provinces: 'Найти область',
   mode_provinces_desc: 'Найдите указанную область на карте',
@@ -155,6 +155,9 @@ const ru = {
 
   // Source
   sourceLabel: 'Источник',
+
+  // Retry wrong answers
+  retryWrong: 'Переиграть ошибки',
 
   // Chat bot
   chatTitle: 'Гео Помощник',
