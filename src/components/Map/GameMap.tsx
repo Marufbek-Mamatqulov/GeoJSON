@@ -6,7 +6,11 @@ import 'leaflet/dist/leaflet.css';
 import { useGameStore } from '../../store/gameStore';
 import { useSettingsStore } from '../../store/settingsStore';
 import { useGame } from '../../hooks/useGame';
-import type { GeoDistrictCollection, GeoDistrictFeature, Province, City, GameMode } from '../../types';
+import type {
+  GeoDistrictCollection, GeoDistrictFeature,
+  GeoProvinceCollection, GeoProvinceFeature,
+  Province, City, GameMode,
+} from '../../types';
 
 delete (L.Icon.Default.prototype as unknown as Record<string, unknown>)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -27,6 +31,7 @@ const TARGET_ICON = L.divIcon({
   iconAnchor: [16, 40],
 });
 
+// Province-click modes use the dissolved province polygons (no district borders)
 const PROVINCE_CLICK_MODES: GameMode[] = [
   'provinces', 'capitals',
   'mountains', 'rivers', 'historical', 'attractions', 'reservoirs', 'forests',
@@ -40,6 +45,7 @@ function isCityDistrictFeature(feature: GeoDistrictFeature): boolean {
 
 interface Props {
   geoData: GeoDistrictCollection;
+  provinceGeoData: GeoProvinceCollection;
   provinces: Province[];
   cities: City[];
 }
@@ -70,15 +76,234 @@ function LocationClickHandler({ active, onLocationClick, feedbackActive, playing
   return null;
 }
 
-export function GameMap({ geoData, provinces, cities }: Props) {
+// ── Province-mode layer (dissolved province polygons) ────────────────────────
+
+interface ProvLayerProps {
+  data: GeoProvinceCollection;
+  provColors: Record<string, string>;
+  provMap: Record<string, Province>;
+  revealedMap: Record<string, 'found_1' | 'found_2' | 'found_3' | 'missed'>;
+  highlightCorrectId: string | null;
+  highlightWrongId: string | null;
+  questionAttempts: number;
+  feedback: string | null;
+  status: string;
+  gameStrategy: string;
+  onProvinceClick: (f: GeoDistrictFeature) => void;
+}
+
+function ProvinceLayer({
+  data, provColors, provMap, revealedMap,
+  highlightCorrectId, highlightWrongId, questionAttempts,
+  feedback, status, gameStrategy, onProvinceClick,
+}: ProvLayerProps) {
+  const geoRef = useRef<L.GeoJSON | null>(null);
+  const { language: lang, showLabels: labels } = useSettingsStore();
+
+  const styleFeature = useCallback((f?: GeoProvinceFeature): PathOptions => {
+    if (!f) return {};
+    const { provinceId } = f.properties;
+
+    const revealed = revealedMap[provinceId];
+    if (revealed === 'found_1')
+      return { fillColor: '#22c55e', color: '#16a34a', weight: 2, fillOpacity: 0.85, opacity: 1 };
+    if (revealed === 'found_2')
+      return { fillColor: '#3b82f6', color: '#2563eb', weight: 2, fillOpacity: 0.85, opacity: 1 };
+    if (revealed === 'found_3')
+      return { fillColor: '#eab308', color: '#ca8a04', weight: 2, fillOpacity: 0.85, opacity: 1 };
+    if (revealed === 'missed')
+      return { fillColor: '#ef4444', color: '#dc2626', weight: 2, fillOpacity: 0.80, opacity: 1 };
+
+    if (highlightCorrectId && provinceId === highlightCorrectId)
+      return { fillColor: '#22c55e', color: '#16a34a', weight: 2, fillOpacity: 0.88, opacity: 1 };
+    if (highlightWrongId && provinceId === highlightWrongId) {
+      const isRed = questionAttempts >= 2;
+      return isRed
+        ? { fillColor: '#ef4444', color: '#dc2626', weight: 2, fillOpacity: 0.72, opacity: 1 }
+        : { fillColor: '#eab308', color: '#ca8a04', weight: 2, fillOpacity: 0.72, opacity: 1 };
+    }
+
+    if (gameStrategy === 'seterra') {
+      return { fillColor: '#f8fafc', color: '#475569', weight: 1.5, fillOpacity: 0.92, opacity: 1 };
+    }
+    const base = provColors[provinceId] ?? '#94a3b8';
+    return { fillColor: base, color: '#ffffff', weight: 1.5, fillOpacity: 0.80, opacity: 1 };
+  }, [revealedMap, highlightCorrectId, highlightWrongId, questionAttempts, provColors, gameStrategy]);
+
+  useEffect(() => {
+    if (!geoRef.current) return;
+    geoRef.current.eachLayer(layer => {
+      const f = (layer as L.GeoJSON & { feature?: GeoProvinceFeature }).feature;
+      if (f && 'setStyle' in layer)
+        (layer as L.Path).setStyle(styleFeature(f as GeoProvinceFeature));
+    });
+  }, [styleFeature]);
+
+  const onEach = useCallback((feature: GeoProvinceFeature, layer: Layer) => {
+    const path = layer as L.Path;
+    path.on({
+      mouseover: () => {
+        if (feedback) return;
+        const nameKey = `name${lang[0].toUpperCase()}${lang.slice(1)}` as 'nameUz';
+        const displayName = provMap[feature.properties.provinceId]?.[nameKey] ?? feature.properties.provinceId;
+        if (labels) {
+          path.bindTooltip(
+            `<span style="font-size:13px;font-weight:600">${displayName}</span>`,
+            { permanent: false, sticky: true, className: 'geo-tooltip' }
+          ).openTooltip();
+        }
+        const { gameStrategy: gs } = useSettingsStore.getState();
+        path.setStyle(
+          gs === 'seterra'
+            ? { fillOpacity: 0.68, fillColor: '#e2e8f0', color: '#1e293b', weight: 2 }
+            : { fillOpacity: 0.95, weight: 2 }
+        );
+      },
+      mouseout: () => {
+        path.closeTooltip();
+        path.setStyle(styleFeature(feature));
+      },
+      click: (e: LeafletMouseEvent) => {
+        if (feedback || status !== 'playing') return;
+        L.DomEvent.stopPropagation(e);
+        // Adapt province feature to the shape handleProvinceClick expects
+        onProvinceClick(feature as unknown as GeoDistrictFeature);
+      },
+    });
+  }, [feedback, status, lang, labels, provMap, styleFeature, onProvinceClick]);
+
+  return (
+    <GeoJSON
+      key={`prov-${highlightCorrectId ?? ''}-${highlightWrongId ?? ''}-${gameStrategy}`}
+      data={data as GeoJSON.GeoJsonObject}
+      style={f => styleFeature(f as GeoProvinceFeature)}
+      onEachFeature={(f, l) => onEach(f as GeoProvinceFeature, l)}
+      ref={geoRef}
+    />
+  );
+}
+
+// ── District-mode layer ──────────────────────────────────────────────────────
+
+interface DistLayerProps {
+  data: GeoDistrictCollection;
+  provColors: Record<string, string>;
+  revealedMap: Record<string, 'found_1' | 'found_2' | 'found_3' | 'missed'>;
+  highlightCorrectId: string | null;
+  highlightWrongId: string | null;
+  feedback: string | null;
+  status: string;
+  onDistrictClick: (f: GeoDistrictFeature) => void;
+}
+
+function DistrictLayer({
+  data, revealedMap, highlightCorrectId, highlightWrongId,
+  feedback, status, onDistrictClick,
+}: DistLayerProps) {
+  const geoRef = useRef<L.GeoJSON | null>(null);
+  const { language: lang, showLabels: labels } = useSettingsStore();
+
+  const styleFeature = useCallback((f?: GeoDistrictFeature): PathOptions => {
+    if (!f) return {};
+    if (isCityDistrictFeature(f))
+      return { fillColor: 'transparent', color: 'transparent', weight: 0, fillOpacity: 0, opacity: 0 };
+
+    const { id } = f.properties;
+    const revealed = revealedMap[id];
+    if (revealed === 'found_1')
+      return { fillColor: '#22c55e', color: '#16a34a', weight: 1.5, fillOpacity: 0.85, opacity: 1 };
+    if (revealed === 'found_2')
+      return { fillColor: '#3b82f6', color: '#2563eb', weight: 1.5, fillOpacity: 0.85, opacity: 1 };
+    if (revealed === 'found_3')
+      return { fillColor: '#eab308', color: '#ca8a04', weight: 1.5, fillOpacity: 0.85, opacity: 1 };
+    if (revealed === 'missed')
+      return { fillColor: '#ef4444', color: '#dc2626', weight: 1.5, fillOpacity: 0.80, opacity: 1 };
+
+    if (highlightCorrectId && id === highlightCorrectId)
+      return { fillColor: '#22c55e', color: '#16a34a', weight: 2, fillOpacity: 0.85, opacity: 1 };
+    if (highlightWrongId && id === highlightWrongId)
+      return { fillColor: '#ef4444', color: '#dc2626', weight: 2, fillOpacity: 0.65, opacity: 1 };
+
+    // Always white with visible borders for districts
+    return { fillColor: '#f8fafc', color: '#475569', weight: 1, fillOpacity: 0.92, opacity: 1 };
+  }, [revealedMap, highlightCorrectId, highlightWrongId]);
+
+  useEffect(() => {
+    if (!geoRef.current) return;
+    geoRef.current.eachLayer(layer => {
+      const f = (layer as L.GeoJSON & { feature?: GeoDistrictFeature }).feature;
+      if (f && 'setStyle' in layer)
+        (layer as L.Path).setStyle(styleFeature(f as GeoDistrictFeature));
+    });
+  }, [styleFeature]);
+
+  const onEach = useCallback((feature: GeoDistrictFeature, layer: Layer) => {
+    if (isCityDistrictFeature(feature)) return;
+    const path = layer as L.Path;
+    path.on({
+      mouseover: () => {
+        if (feedback) return;
+        const { language: l, showLabels: lbl } = useSettingsStore.getState();
+        const nameKey = `name${l[0].toUpperCase()}${l.slice(1)}` as 'nameUz';
+        if (lbl) {
+          path.bindTooltip(
+            `<span style="font-size:13px;font-weight:600">${feature.properties[nameKey]}</span>`,
+            { permanent: false, sticky: true, className: 'geo-tooltip' }
+          ).openTooltip();
+        }
+        path.setStyle({ fillOpacity: 0.70, fillColor: '#e2e8f0', color: '#1e293b', weight: 2 });
+      },
+      mouseout: () => {
+        path.closeTooltip();
+        path.setStyle(styleFeature(feature));
+      },
+      click: (e: LeafletMouseEvent) => {
+        if (feedback || status !== 'playing') return;
+        L.DomEvent.stopPropagation(e);
+        onDistrictClick(feature);
+      },
+    });
+  }, [feedback, status, lang, labels, styleFeature, onDistrictClick]);
+
+  return (
+    <GeoJSON
+      key={`dist-${highlightCorrectId ?? ''}-${highlightWrongId ?? ''}`}
+      data={data as GeoJSON.GeoJsonObject}
+      style={f => styleFeature(f as GeoDistrictFeature)}
+      onEachFeature={(f, l) => onEach(f as GeoDistrictFeature, l)}
+      ref={geoRef}
+    />
+  );
+}
+
+// ── Cities background layer ──────────────────────────────────────────────────
+
+function CitiesBackgroundLayer({ data, provColors }: { data: GeoDistrictCollection; provColors: Record<string, string> }) {
+  const styleFeature = useCallback((f?: GeoDistrictFeature): PathOptions => {
+    if (!f) return {};
+    const base = provColors[f.properties.provinceId] ?? '#94a3b8';
+    return { fillColor: base, color: '#ffffff', weight: 0.5, fillOpacity: 0.30, opacity: 0.6 };
+  }, [provColors]);
+
+  return (
+    <GeoJSON
+      key="cities-bg"
+      data={data as GeoJSON.GeoJsonObject}
+      style={f => styleFeature(f as GeoDistrictFeature)}
+    />
+  );
+}
+
+// ── Main GameMap ─────────────────────────────────────────────────────────────
+
+export function GameMap({ geoData, provinceGeoData, provinces, cities }: Props) {
   const {
     mode, questions, currentIndex,
     highlightCorrectId, highlightWrongId,
     feedback, status, revealedMap, questionAttempts,
   } = useGameStore();
-  const { theme, gameStrategy } = useSettingsStore();
+  const { theme, gameStrategy, showHint } = useSettingsStore();
   const { handleProvinceClick, handleDistrictClick, handleLocationClick } = useGame();
-  const geoRef = useRef<L.GeoJSON | null>(null);
 
   const provColors = useMemo(
     () => Object.fromEntries(provinces.map(p => [p.id, p.color])),
@@ -99,147 +324,7 @@ export function GameMap({ geoData, provinces, cities }: Props) {
 
   const isProvClickMode = PROVINCE_CLICK_MODES.includes(mode);
 
-  // ── Polygon style ──────────────────────────────────────────────────────────
-  const featureStyle = useCallback((feature?: GeoDistrictFeature): PathOptions => {
-    if (!feature) return {};
-    const { id, provinceId } = feature.properties;
-
-    if (isProvClickMode) {
-      // Revealed (correct find or auto-reveal) — Seterra color scheme
-      const revealed = revealedMap[provinceId];
-      if (revealed === 'found_1') // found on 1st attempt → green
-        return { fillColor: '#22c55e', color: '#16a34a', weight: 1, fillOpacity: 0.80, opacity: 1 };
-      if (revealed === 'found_2') // found on 2nd attempt → blue
-        return { fillColor: '#3b82f6', color: '#2563eb', weight: 1, fillOpacity: 0.80, opacity: 1 };
-      if (revealed === 'found_3') // found on 3rd attempt → yellow
-        return { fillColor: '#eab308', color: '#ca8a04', weight: 1, fillOpacity: 0.80, opacity: 1 };
-      if (revealed === 'missed')  // auto-revealed → red
-        return { fillColor: '#ef4444', color: '#dc2626', weight: 1, fillOpacity: 0.75, opacity: 1 };
-
-      // Feedback highlight
-      if (highlightCorrectId && provinceId === highlightCorrectId)
-        return { fillColor: '#22c55e', color: '#16a34a', weight: 0, fillOpacity: 0.80, opacity: 1 };
-      if (highlightWrongId && id === highlightWrongId) {
-        const isRed = questionAttempts >= 2;
-        return isRed
-          ? { fillColor: '#ef4444', color: '#dc2626', weight: 0, fillOpacity: 0.70, opacity: 1 }
-          : { fillColor: '#eab308', color: '#ca8a04', weight: 0, fillOpacity: 0.70, opacity: 1 };
-      }
-
-      if (gameStrategy === 'seterra') {
-        // Seterra: white initial — no district borders visible within provinces
-        return { fillColor: '#f1f5f9', color: '#f1f5f9', weight: 0, fillOpacity: 0.82, opacity: 0 };
-      }
-      // WorldGeo — province colors, no internal district borders
-      const base = provColors[provinceId] ?? '#94a3b8';
-      return { fillColor: base, color: base, weight: 0, fillOpacity: 0.65, opacity: 0 };
-    }
-
-    if (mode === 'districts') {
-      if (isCityDistrictFeature(feature))
-        return { fillColor: 'transparent', color: 'transparent', weight: 0, fillOpacity: 0, opacity: 0 };
-
-      const revealed = revealedMap[id];
-      if (revealed === 'found_1')
-        return { fillColor: '#22c55e', color: '#16a34a', weight: 2, fillOpacity: 0.80, opacity: 1 };
-      if (revealed === 'found_2')
-        return { fillColor: '#3b82f6', color: '#2563eb', weight: 2, fillOpacity: 0.80, opacity: 1 };
-      if (revealed === 'found_3')
-        return { fillColor: '#eab308', color: '#ca8a04', weight: 2, fillOpacity: 0.80, opacity: 1 };
-      if (revealed === 'missed')
-        return { fillColor: '#ef4444', color: '#dc2626', weight: 2, fillOpacity: 0.75, opacity: 1 };
-
-      if (highlightCorrectId && id === highlightCorrectId)
-        return { fillColor: '#22c55e', color: '#16a34a', weight: 2.5, fillOpacity: 0.75, opacity: 1 };
-      if (highlightWrongId && id === highlightWrongId) {
-        const isRed = questionAttempts >= 2;
-        return isRed
-          ? { fillColor: '#ef4444', color: '#dc2626', weight: 2, fillOpacity: 0.65, opacity: 1 }
-          : { fillColor: '#eab308', color: '#ca8a04', weight: 2, fillOpacity: 0.65, opacity: 1 };
-      }
-
-      if (gameStrategy === 'seterra') {
-        return { fillColor: '#334155', color: '#475569', weight: 0.8, fillOpacity: 0.35, opacity: 0.6 };
-      }
-      const base = provColors[provinceId] ?? '#94a3b8';
-      return { fillColor: base, color: '#fff', weight: 0.8, fillOpacity: 0.45, opacity: 0.7 };
-    }
-
-    // cities mode
-    if (highlightCorrectId && provinceId === highlightCorrectId)
-      return { fillColor: '#22c55e', color: '#16a34a', weight: 2, fillOpacity: 0.5, opacity: 1 };
-    const base = provColors[provinceId] ?? '#94a3b8';
-    return { fillColor: base, color: '#fff', weight: 0.8, fillOpacity: 0.3, opacity: 0.6 };
-  }, [mode, isProvClickMode, highlightCorrectId, highlightWrongId, provColors, revealedMap, questionAttempts, gameStrategy]);
-
-  // Re-style without full GeoJSON remount
-  useEffect(() => {
-    if (!geoRef.current) return;
-    geoRef.current.eachLayer((layer) => {
-      const f = (layer as L.GeoJSON & { feature?: GeoDistrictFeature }).feature;
-      if (f && 'setStyle' in layer) (layer as L.Path).setStyle(featureStyle(f as GeoDistrictFeature));
-    });
-  }, [featureStyle]);
-
-  // ── Per-feature events ──────────────────────────────────────────────────
-  const onEachFeature = useCallback((feature: GeoDistrictFeature, layer: Layer) => {
-    const path = layer as L.Path;
-
-    path.on({
-      mouseover: () => {
-        if (mode === 'districts' && isCityDistrictFeature(feature)) return;
-        if (feedback) return;
-        const { language: lang, showLabels: labels } = useSettingsStore.getState();
-        const nameKey = `name${lang[0].toUpperCase()}${lang.slice(1)}` as 'nameUz';
-        const displayName = isProvClickMode
-          ? (provMap[feature.properties.provinceId]?.[nameKey] ?? feature.properties[nameKey])
-          : feature.properties[nameKey];
-        if (labels) {
-          path.bindTooltip(
-            `<span style="font-size:13px;font-weight:600">${displayName}</span>`,
-            { permanent: false, sticky: true, className: 'geo-tooltip' }
-          ).openTooltip();
-        }
-
-        if (isProvClickMode) {
-          // Highlight ENTIRE province — no individual district borders shown
-          const pId = feature.properties.provinceId;
-          geoRef.current?.eachLayer((l) => {
-            const f2 = (l as L.GeoJSON & { feature?: GeoDistrictFeature }).feature;
-            if (f2?.properties.provinceId === pId && 'setStyle' in l) {
-              (l as L.Path).setStyle({ fillOpacity: 0.85, weight: 0 });
-            }
-          });
-        } else {
-          path.setStyle({ fillOpacity: 0.8, weight: 2 });
-        }
-      },
-      mouseout: () => {
-        if (mode === 'districts' && isCityDistrictFeature(feature)) return;
-        path.closeTooltip();
-        if (isProvClickMode) {
-          const pId = feature.properties.provinceId;
-          geoRef.current?.eachLayer((l) => {
-            const f2 = (l as L.GeoJSON & { feature?: GeoDistrictFeature }).feature;
-            if (f2?.properties.provinceId === pId && 'setStyle' in l) {
-              (l as L.Path).setStyle(featureStyle(f2 as GeoDistrictFeature));
-            }
-          });
-        } else {
-          path.setStyle(featureStyle(feature));
-        }
-      },
-      click: (e: LeafletMouseEvent) => {
-        if (mode === 'districts' && isCityDistrictFeature(feature)) return;
-        if (feedback || status !== 'playing') return;
-        L.DomEvent.stopPropagation(e);
-        if (isProvClickMode) handleProvinceClick(feature);
-        else if (mode === 'districts') handleDistrictClick(feature);
-      },
-    });
-  }, [mode, isProvClickMode, feedback, status, featureStyle, provMap, handleProvinceClick, handleDistrictClick]);
-
-  // ── City dot markers ──────────────────────────────────────────────────────
+  // ── City dot markers ────────────────────────────────────────────────────────
   const cityMarkers = useMemo(() => {
     if (mode !== 'cities') return null;
     const dotColor = theme === 'dark' ? '#34d399' : '#059669';
@@ -253,12 +338,11 @@ export function GameMap({ geoData, provinces, cities }: Props) {
     });
   }, [mode, cities, theme]);
 
-  // ── Tiles ──────────────────────────────────────────────────────────────────
+  // ── Tiles ───────────────────────────────────────────────────────────────────
   const tileUrl = theme === 'dark'
     ? 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png'
     : 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png';
-
-  const tileAttr = '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>';
+  const tileAttr = '&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
   return (
     <MapContainer
@@ -277,19 +361,50 @@ export function GameMap({ geoData, provinces, cities }: Props) {
         playing={status === 'playing'}
       />
 
-      <GeoJSON
-        key={`${mode}-${currentIndex}-${highlightCorrectId ?? ''}-${highlightWrongId ?? ''}-${gameStrategy}`}
-        data={geoData as GeoJSON.GeoJsonObject}
-        style={(f) => featureStyle(f as GeoDistrictFeature)}
-        onEachFeature={(f, l) => onEachFeature(f as GeoDistrictFeature, l)}
-        ref={geoRef}
-      />
+      {/* Province click modes: show dissolved province polygons (no district borders) */}
+      {isProvClickMode && (
+        <ProvinceLayer
+          data={provinceGeoData}
+          provColors={provColors}
+          provMap={provMap}
+          revealedMap={revealedMap}
+          highlightCorrectId={highlightCorrectId}
+          highlightWrongId={highlightWrongId}
+          questionAttempts={questionAttempts}
+          feedback={feedback}
+          status={status}
+          gameStrategy={gameStrategy}
+          onProvinceClick={handleProvinceClick}
+        />
+      )}
 
-      {targetCoords && feedback && (
+      {/* District mode: show individual district polygons */}
+      {mode === 'districts' && (
+        <DistrictLayer
+          data={geoData}
+          provColors={provColors}
+          revealedMap={revealedMap}
+          highlightCorrectId={highlightCorrectId}
+          highlightWrongId={highlightWrongId}
+          feedback={feedback}
+          status={status}
+          onDistrictClick={handleDistrictClick}
+        />
+      )}
+
+      {/* Cities mode: province-colored background */}
+      {mode === 'cities' && (
+        <CitiesBackgroundLayer data={geoData} provColors={provColors} />
+      )}
+
+      {/* Target pin: only for location modes (capitals/cities); wrong → only if showHint is on */}
+      {(mode === 'capitals' || mode === 'cities') && targetCoords && feedback &&
+        (feedback === 'correct' || showHint) && (
         <Marker position={[targetCoords.lat, targetCoords.lng]} icon={TARGET_ICON} />
       )}
 
-      {targetCoords && feedback && (
+      {(mode === 'capitals' || mode === 'cities') && targetCoords && feedback &&
+        (feedback === 'correct' || showHint) && (
         <Circle
           center={[targetCoords.lat, targetCoords.lng]}
           radius={feedback === 'correct' ? 15000 : 50000}

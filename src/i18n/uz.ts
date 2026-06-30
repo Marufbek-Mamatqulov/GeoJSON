@@ -82,6 +82,7 @@ const uz = {
   correctAnswers: "To'g'ri javoblar",
   wrongAnswers: 'Xato javoblar',
   accuracy: 'Aniqlik',
+  totalAttempts: 'Urinishlar',
   newHighScore: 'Yangi rekord!',
   playAgain: "Qayta o'ynash",
   mainMenu: 'Asosiy menyu',

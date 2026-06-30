@@ -75,6 +75,7 @@ const ru = {
   correctAnswers: 'Правильных ответов',
   wrongAnswers: 'Неправильных ответов',
   accuracy: 'Точность',
+  totalAttempts: 'Попыток',
   newHighScore: 'Новый рекорд!',
   playAgain: 'Играть снова',
   mainMenu: 'Главное меню',

@@ -8,11 +8,13 @@ interface SettingsState {
   difficulty: Difficulty;
   gameStrategy: GameStrategy;
   showLabels: boolean;
+  showHint: boolean;   // show correct-location pin on wrong answer (only for capitals/cities)
   setLanguage: (lang: Language) => void;
   setTheme: (theme: Theme) => void;
   setDifficulty: (diff: Difficulty) => void;
   setGameStrategy: (s: GameStrategy) => void;
   setShowLabels: (v: boolean) => void;
+  setShowHint: (v: boolean) => void;
   toggleTheme: () => void;
 }
 
@@ -24,11 +26,13 @@ export const useSettingsStore = create<SettingsState>()(
       difficulty: 'medium',
       gameStrategy: 'seterra',
       showLabels: true,
+      showHint: true,
       setLanguage: (language) => set({ language }),
       setTheme: (theme) => set({ theme }),
       setDifficulty: (difficulty) => set({ difficulty }),
       setGameStrategy: (gameStrategy) => set({ gameStrategy }),
       setShowLabels: (showLabels) => set({ showLabels }),
+      setShowHint: (showHint) => set({ showHint }),
       toggleTheme: () => set({ theme: get().theme === 'light' ? 'dark' : 'light' }),
     }),
     { name: 'geo-settings' }

@@ -75,6 +75,7 @@ const en = {
   correctAnswers: 'Correct Answers',
   wrongAnswers: 'Wrong Answers',
   accuracy: 'Accuracy',
+  totalAttempts: 'Attempts',
   newHighScore: 'New High Score!',
   playAgain: 'Play Again',
   mainMenu: 'Main Menu',

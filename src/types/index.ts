@@ -126,3 +126,18 @@ export interface GeoDistrictCollection {
   type: 'FeatureCollection';
   features: GeoDistrictFeature[];
 }
+
+// Dissolved province-level polygon features (one per province)
+export interface GeoProvinceFeature {
+  type: 'Feature';
+  properties: {
+    id: string;        // same as provinceId
+    provinceId: string;
+  };
+  geometry: GeoJSON.Geometry;
+}
+
+export interface GeoProvinceCollection {
+  type: 'FeatureCollection';
+  features: GeoProvinceFeature[];
+}

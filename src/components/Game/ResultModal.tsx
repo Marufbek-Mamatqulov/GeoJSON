@@ -1,4 +1,4 @@
-import { Trophy, Award, Star, ThumbsUp, TrendingUp, RefreshCw, Home, CheckCircle2, XCircle, Sparkles, AlertTriangle, Lightbulb, RotateCcw } from 'lucide-react';
+import { Trophy, Award, Star, ThumbsUp, TrendingUp, RefreshCw, Home, CheckCircle2, XCircle, Sparkles, AlertTriangle, Lightbulb, RotateCcw, MousePointerClick } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useGameStore } from '../../store/gameStore';
 import { useSettingsStore } from '../../store/settingsStore';
@@ -46,9 +46,10 @@ export function ResultModal({ onPlayAgain, onGoToMenu, onRetryWrong, provinces }
   const { language } = useSettingsStore();
   const stats = loadStats();
 
-  const correct  = answers.filter(a => a.correct).length;
-  const wrong    = answers.filter(a => !a.correct).length;
-  const total    = answers.length;
+  const correct        = answers.filter(a => a.correct).length;
+  const wrong          = answers.filter(a => !a.correct).length;
+  const total          = answers.length;
+  const totalAttempts  = answers.reduce((sum, a) => sum + (a.attempts ?? 1), 0);
   const pct      = total > 0 ? Math.round((correct / total) * 100) : 0;
   const grade    = getGrade(pct);
   const cfg      = GRADE_CONFIG[grade];
@@ -116,7 +117,7 @@ export function ResultModal({ onPlayAgain, onGoToMenu, onRetryWrong, provinces }
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-3 gap-2 mb-6">
+        <div className="grid grid-cols-2 gap-2 mb-6">
           <div className="rounded-2xl bg-slate-800/50 border border-slate-700/40 p-3 text-center">
             <CheckCircle2 size={18} className="text-emerald-400 mx-auto mb-1" strokeWidth={2} />
             <p className="text-xl font-black text-emerald-400">{correct}</p>
@@ -135,6 +136,13 @@ export function ResultModal({ onPlayAgain, onGoToMenu, onRetryWrong, provinces }
             <p className="text-lg font-black text-indigo-400 mb-1">{pct}%</p>
             <p className="text-[9px] text-slate-600 uppercase tracking-wide font-bold">
               {t(language, 'accuracy')}
+            </p>
+          </div>
+          <div className="rounded-2xl bg-slate-800/50 border border-slate-700/40 p-3 text-center">
+            <MousePointerClick size={18} className="text-amber-400 mx-auto mb-1" strokeWidth={2} />
+            <p className="text-xl font-black text-amber-400">{totalAttempts}</p>
+            <p className="text-[9px] text-slate-600 mt-0.5 uppercase tracking-wide font-bold">
+              {t(language, 'totalAttempts')}
             </p>
           </div>
         </div>

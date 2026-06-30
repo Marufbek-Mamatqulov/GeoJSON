@@ -3,7 +3,7 @@ import {
   Globe, Map, MapPin, Building2,
   Mountain, Waves, Clock, Star, Droplets, Trees,
   Leaf, Zap, Flame, Play, BarChart3, ChevronLeft,
-  Target, Layers, Tag,
+  Target, Layers, Tag, Crosshair,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import { useGameStore } from '../../store/gameStore';
@@ -83,7 +83,7 @@ type CountOption = 10 | 15 | 20 | null;
 
 export function MainMenu({ provinces, buildQuestions, onBackToLanding }: Props) {
   const { startGame, setShowStats, showStats } = useGameStore();
-  const { language, difficulty, setDifficulty, gameStrategy, setGameStrategy, showLabels, setShowLabels } = useSettingsStore();
+  const { language, difficulty, setDifficulty, gameStrategy, setGameStrategy, showLabels, setShowLabels, showHint, setShowHint } = useSettingsStore();
   const [selectedMode, setSelectedMode] = useState<GameMode>('provinces');
   const [districtScope, setDistrictScope] = useState<string>('');
   const [cityScope, setCityScope] = useState<string>('');
@@ -240,8 +240,8 @@ export function MainMenu({ provinces, buildQuestions, onBackToLanding }: Props) 
           </div>
         </section>
 
-        {/* Labels toggle */}
-        <section>
+        {/* Labels toggle + Hint toggle */}
+        <section className="space-y-2">
           <button
             onClick={() => setShowLabels(!showLabels)}
             className={`w-full flex items-center justify-between px-4 py-3 md:py-4 rounded-2xl border-2
@@ -257,12 +257,40 @@ export function MainMenu({ provinces, buildQuestions, onBackToLanding }: Props) 
                 {language === 'ru' ? 'Показывать названия на карте' : language === 'en' ? 'Show map labels' : "Xaritada nomlarni ko'rsatish"}
               </span>
             </div>
-            {/* Toggle pill */}
             <div className={`w-10 h-5 md:w-12 md:h-6 rounded-full relative transition-colors duration-200 ${
               showLabels ? 'bg-indigo-500' : 'bg-slate-700'
             }`}>
               <div className={`absolute top-0.5 w-4 h-4 md:w-5 md:h-5 rounded-full bg-white shadow transition-transform duration-200 ${
                 showLabels ? 'translate-x-5 md:translate-x-6' : 'translate-x-0.5'
+              }`} />
+            </div>
+          </button>
+
+          <button
+            onClick={() => setShowHint(!showHint)}
+            className={`w-full flex items-center justify-between px-4 py-3 md:py-4 rounded-2xl border-2
+              transition-all duration-200 ${
+                showHint
+                  ? 'border-cyan-500/50 bg-cyan-500/10 text-cyan-300'
+                  : 'border-slate-700/40 bg-slate-800/40 text-slate-500'
+              }`}
+          >
+            <div className="flex items-center gap-2.5">
+              <Crosshair className="w-4 h-4 md:w-5 md:h-5" strokeWidth={2} />
+              <div className="text-left">
+                <span className="text-sm md:text-base font-bold block">
+                  {language === 'ru' ? 'Подсказка при ошибке' : language === 'en' ? 'Show hint on wrong answer' : "Xato bosishda maslahat"}
+                </span>
+                <span className="text-[10px] md:text-xs text-slate-600 leading-tight">
+                  {language === 'ru' ? 'Показывать правильное место (только пойманные/города)' : language === 'en' ? 'Show correct location pin (capitals & cities only)' : "To'g'ri joylashuvni ko'rsatish (poytaxtlar va shaharlar)"}
+                </span>
+              </div>
+            </div>
+            <div className={`shrink-0 w-10 h-5 md:w-12 md:h-6 rounded-full relative transition-colors duration-200 ${
+              showHint ? 'bg-cyan-500' : 'bg-slate-700'
+            }`}>
+              <div className={`absolute top-0.5 w-4 h-4 md:w-5 md:h-5 rounded-full bg-white shadow transition-transform duration-200 ${
+                showHint ? 'translate-x-5 md:translate-x-6' : 'translate-x-0.5'
               }`} />
             </div>
           </button>

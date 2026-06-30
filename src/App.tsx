@@ -17,7 +17,7 @@ import {
   buildCapitalQuestions, buildCityQuestions,
   buildGeoFeatureQuestions,
 } from './utils/gameLogic';
-import type { Province, District, City, GeoDistrictCollection, GeoFeature, GameMode } from './types';
+import type { Province, District, City, GeoDistrictCollection, GeoProvinceCollection, GeoFeature, GameMode } from './types';
 
 export type AppView = 'landing' | 'game' | 'demographics' | 'encyclopedia' | 'tour360';
 
@@ -30,6 +30,7 @@ export default function App() {
   const [districts, setDistricts] = useState<District[]>([]);
   const [cities, setCities] = useState<City[]>([]);
   const [geoData, setGeoData] = useState<GeoDistrictCollection | null>(null);
+  const [provinceGeoData, setProvinceGeoData] = useState<GeoProvinceCollection | null>(null);
   const [loading, setLoading] = useState(true);
 
   // Extra geo-feature data
@@ -49,6 +50,7 @@ export default function App() {
     Promise.all([
       fetch('data/provinces.json').then(r => r.json()),
       fetch('data/districts.geojson').then(r => r.json()),
+      fetch('data/provinces-geo.geojson').then(r => r.json()),
       fetch('data/cities.json').then(r => r.json()),
       fetch('data/mountains.json').then(r => r.json()),
       fetch('data/rivers.json').then(r => r.json()),
@@ -56,9 +58,10 @@ export default function App() {
       fetch('data/attractions.json').then(r => r.json()),
       fetch('data/reservoirs.json').then(r => r.json()),
       fetch('data/forests.json').then(r => r.json()),
-    ]).then(([prov, geo, city, mtn, riv, hist, attr, res, for_]) => {
+    ]).then(([prov, geo, provGeo, city, mtn, riv, hist, attr, res, for_]) => {
       setProvinces(prov);
       setGeoData(geo);
+      setProvinceGeoData(provGeo);
       const dists: District[] = (geo as GeoDistrictCollection).features.map(f => ({
         id:         f.properties.id,
         nameUz:     f.properties.nameUz,
@@ -203,14 +206,14 @@ export default function App() {
         />
       )}
 
-      {status === 'playing' && geoData && (
+      {status === 'playing' && geoData && provinceGeoData && (
         <div className="flex flex-col md:flex-row h-screen pt-16">
           <aside className="w-full md:w-72 lg:w-80 flex-shrink-0 border-b md:border-b-0 md:border-r
             border-slate-800/60 game-panel md:h-full overflow-hidden">
             <GamePanel provinces={provinces} />
           </aside>
           <main className="flex-1 relative">
-            <GameMap geoData={geoData} provinces={provinces} cities={cities} />
+            <GameMap geoData={geoData} provinceGeoData={provinceGeoData} provinces={provinces} cities={cities} />
           </main>
         </div>
       )}

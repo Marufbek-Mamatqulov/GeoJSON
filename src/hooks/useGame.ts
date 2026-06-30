@@ -8,7 +8,7 @@ import {
 import { updateStats } from '../utils/storage';
 import type { GeoDistrictFeature } from '../types';
 
-const MAX_ATTEMPTS = 3; // Seterra: auto-reveal after this many wrong tries
+const MAX_ATTEMPTS = 3; // Seterra provinces mode: auto-reveal after this many wrong tries
 
 export function useGame() {
   const game = useGameStore();
@@ -65,11 +65,10 @@ export function useGame() {
 
   const handleTimeout = useCallback(() => {
     if (waitingRef.current) return;
-    // If brief feedback is active when timer fires, cancel the brief feedback
     feedbackRef.current = false;
     waitingRef.current = true;
 
-    const { questions, currentIndex } = useGameStore.getState();
+    const { questions, currentIndex, questionAttempts } = useGameStore.getState();
     const q = questions[currentIndex];
     const correctId = q?.correctDistrictId ?? q?.correctProvinceId ?? q?.targetId;
 
@@ -78,6 +77,7 @@ export function useGame() {
       correct: false,
       timeUsed: TOTAL_TIME[difficulty],
       pointsEarned: 0,
+      attempts: questionAttempts + 1,
     });
     if (correctId) game.revealRegion(correctId, 'missed');
     game.setFeedback('wrong', correctId, undefined);
@@ -88,7 +88,7 @@ export function useGame() {
   const handleProvinceClick = useCallback((feature: GeoDistrictFeature) => {
     if (waitingRef.current || feedbackRef.current || game.status !== 'playing') return;
 
-    const { questions, currentIndex, timeLeft, questionAttempts } = useGameStore.getState();
+    const { questions, currentIndex, timeLeft, questionAttempts, mode } = useGameStore.getState();
     const { gameStrategy } = useSettingsStore.getState();
     const q = questions[currentIndex];
     const clickedProvince = feature.properties.provinceId;
@@ -101,7 +101,10 @@ export function useGame() {
       clearTimer();
       const points = calcPolygonScore(true, timeLeft, TOTAL_TIME[difficulty], difficulty);
       game.addAnswer({ questionId: q.id, correct: true, timeUsed, pointsEarned: points, attempts: questionAttempts + 1 });
-      const foundType = questionAttempts === 0 ? 'found_1' as const : questionAttempts === 1 ? 'found_2' as const : 'found_3' as const;
+      // Seterra provinces: color tracks attempts. All other cases: always green (found_1).
+      const foundType = (mode === 'provinces' && gameStrategy === 'seterra')
+        ? (questionAttempts === 0 ? 'found_1' as const : questionAttempts === 1 ? 'found_2' as const : 'found_3' as const)
+        : 'found_1' as const;
       game.revealRegion(q.correctProvinceId!, foundType);
       game.setFeedback('correct', q.correctProvinceId ?? undefined, undefined);
       setTimeout(() => { game.clearFeedback(); advance(); }, 1200);
@@ -109,12 +112,11 @@ export function useGame() {
     }
 
     // Wrong click
-    if (gameStrategy === 'seterra') {
+    if (gameStrategy === 'seterra' && mode === 'provinces') {
+      // Seterra provinces only: auto-reveal after MAX_ATTEMPTS wrong tries
       const newAttempts = questionAttempts + 1;
       game.addAttempt();
-
       if (newAttempts >= MAX_ATTEMPTS) {
-        // 3rd wrong attempt — auto-reveal
         waitingRef.current = true;
         feedbackRef.current = true;
         clearTimer();
@@ -123,35 +125,28 @@ export function useGame() {
         game.setFeedback('wrong', q.correctProvinceId ?? undefined, feature.properties.id);
         setTimeout(() => { game.clearFeedback(); advance(); }, 2500);
       } else {
-        // Brief flash — timer keeps ticking, question stays
         feedbackRef.current = true;
         game.setFeedback('wrong', undefined, feature.properties.id);
         setTimeout(() => {
-          if (!waitingRef.current) {
-            game.clearFeedback();
-            feedbackRef.current = false;
-          }
+          if (!waitingRef.current) { game.clearFeedback(); feedbackRef.current = false; }
         }, 900);
       }
     } else {
-      // WorldGeo — unlimited attempts, brief flash, stay on question
+      // All other modes (WorldGeo provinces + all non-province modes): unlimited, no reveal
+      game.addAttempt();
       feedbackRef.current = true;
       game.setFeedback('wrong', undefined, feature.properties.id);
       setTimeout(() => {
-        if (!waitingRef.current) {
-          game.clearFeedback();
-          feedbackRef.current = false;
-        }
+        if (!waitingRef.current) { game.clearFeedback(); feedbackRef.current = false; }
       }, 700);
     }
   }, [game, difficulty, advance]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // District click
+  // District click — always unlimited attempts, never auto-reveal
   const handleDistrictClick = useCallback((feature: GeoDistrictFeature) => {
     if (waitingRef.current || feedbackRef.current || game.status !== 'playing') return;
 
     const { questions, currentIndex, timeLeft, questionAttempts } = useGameStore.getState();
-    const { gameStrategy } = useSettingsStore.getState();
     const q = questions[currentIndex];
     const correct = feature.properties.id === q.correctDistrictId;
     const timeUsed = TOTAL_TIME[difficulty] - timeLeft;
@@ -162,54 +157,26 @@ export function useGame() {
       clearTimer();
       const points = calcPolygonScore(true, timeLeft, TOTAL_TIME[difficulty], difficulty);
       game.addAnswer({ questionId: q.id, correct: true, timeUsed, pointsEarned: points, attempts: questionAttempts + 1 });
-      const foundType = questionAttempts === 0 ? 'found_1' as const : questionAttempts === 1 ? 'found_2' as const : 'found_3' as const;
-      game.revealRegion(q.correctDistrictId!, foundType);
+      game.revealRegion(q.correctDistrictId!, 'found_1'); // Always green for districts
       game.setFeedback('correct', q.correctDistrictId ?? undefined, undefined);
       setTimeout(() => { game.clearFeedback(); advance(); }, 1200);
       return;
     }
 
-    // Wrong click
-    if (gameStrategy === 'seterra') {
-      const newAttempts = questionAttempts + 1;
-      game.addAttempt();
-
-      if (newAttempts >= MAX_ATTEMPTS) {
-        waitingRef.current = true;
-        feedbackRef.current = true;
-        clearTimer();
-        game.addAnswer({ questionId: q.id, correct: false, timeUsed, pointsEarned: 0, attempts: newAttempts });
-        game.revealRegion(q.correctDistrictId!, 'missed');
-        game.setFeedback('wrong', q.correctDistrictId ?? undefined, feature.properties.id);
-        setTimeout(() => { game.clearFeedback(); advance(); }, 2500);
-      } else {
-        feedbackRef.current = true;
-        game.setFeedback('wrong', undefined, feature.properties.id);
-        setTimeout(() => {
-          if (!waitingRef.current) {
-            game.clearFeedback();
-            feedbackRef.current = false;
-          }
-        }, 900);
-      }
-    } else {
-      feedbackRef.current = true;
-      game.setFeedback('wrong', undefined, feature.properties.id);
-      setTimeout(() => {
-        if (!waitingRef.current) {
-          game.clearFeedback();
-          feedbackRef.current = false;
-        }
-      }, 700);
-    }
+    // Wrong click — unlimited, no reveal
+    game.addAttempt();
+    feedbackRef.current = true;
+    game.setFeedback('wrong', undefined, feature.properties.id);
+    setTimeout(() => {
+      if (!waitingRef.current) { game.clearFeedback(); feedbackRef.current = false; }
+    }, 700);
   }, [game, difficulty, advance]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  // Location click (capitals / cities) — supports retries like province/district clicks
+  // Location click (capitals / cities) — always unlimited, no reveal
   const handleLocationClick = useCallback((lat: number, lng: number) => {
     if (waitingRef.current || feedbackRef.current || game.status !== 'playing') return;
 
     const { questions, currentIndex, timeLeft, questionAttempts } = useGameStore.getState();
-    const { gameStrategy } = useSettingsStore.getState();
     const q = questions[currentIndex];
     if (!q.coords) { advance(); return; }
 
@@ -223,41 +190,20 @@ export function useGame() {
       waitingRef.current = true;
       feedbackRef.current = true;
       clearTimer();
-      const foundType = questionAttempts === 0 ? 'found_1' as const : questionAttempts === 1 ? 'found_2' as const : 'found_3' as const;
       game.addAnswer({ questionId: q.id, correct: true, timeUsed, pointsEarned: points, distanceKm: Math.round(dist) });
-      if (q.correctProvinceId) game.revealRegion(q.correctProvinceId, foundType);
+      if (q.correctProvinceId) game.revealRegion(q.correctProvinceId, 'found_1');
       game.setFeedback('correct', q.correctProvinceId || q.targetId, undefined);
       setTimeout(() => { game.clearFeedback(); advance(); }, 1500);
       return;
     }
 
-    // Wrong click
-    if (gameStrategy === 'seterra') {
-      const newAttempts = questionAttempts + 1;
-      game.addAttempt();
-      if (newAttempts >= MAX_ATTEMPTS) {
-        waitingRef.current = true;
-        feedbackRef.current = true;
-        clearTimer();
-        game.addAnswer({ questionId: q.id, correct: false, timeUsed, pointsEarned: 0, distanceKm: Math.round(dist) });
-        if (q.correctProvinceId) game.revealRegion(q.correctProvinceId, 'missed');
-        game.setFeedback('wrong', q.correctProvinceId || q.targetId, undefined);
-        setTimeout(() => { game.clearFeedback(); advance(); }, 2500);
-      } else {
-        feedbackRef.current = true;
-        game.setFeedback('wrong', undefined, undefined);
-        setTimeout(() => {
-          if (!waitingRef.current) { game.clearFeedback(); feedbackRef.current = false; }
-        }, 900);
-      }
-    } else {
-      // WorldGeo — unlimited attempts, brief flash
-      feedbackRef.current = true;
-      game.setFeedback('wrong', undefined, undefined);
-      setTimeout(() => {
-        if (!waitingRef.current) { game.clearFeedback(); feedbackRef.current = false; }
-      }, 700);
-    }
+    // Wrong click — unlimited, no reveal
+    game.addAttempt();
+    feedbackRef.current = true;
+    game.setFeedback('wrong', undefined, undefined);
+    setTimeout(() => {
+      if (!waitingRef.current) { game.clearFeedback(); feedbackRef.current = false; }
+    }, 700);
   }, [game, difficulty, advance]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return { handleProvinceClick, handleDistrictClick, handleLocationClick };
