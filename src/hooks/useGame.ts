@@ -176,7 +176,7 @@ export function useGame() {
   const handleLocationClick = useCallback((lat: number, lng: number) => {
     if (waitingRef.current || feedbackRef.current || game.status !== 'playing') return;
 
-    const { questions, currentIndex, timeLeft, questionAttempts } = useGameStore.getState();
+    const { questions, currentIndex, timeLeft } = useGameStore.getState();
     const q = questions[currentIndex];
     if (!q.coords) { advance(); return; }
 
