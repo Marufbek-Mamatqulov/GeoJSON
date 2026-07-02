@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react';
 import { Map } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 import { useGameStore } from './store/gameStore';
 import { useSettingsStore } from './store/settingsStore';
 import { Header } from './components/Layout/Header';
@@ -149,6 +150,7 @@ export default function App() {
           onEncyclopedia={() => setView('encyclopedia')}
         />
         <ChatBot />
+        <Analytics />
       </>
     );
   }
@@ -159,6 +161,7 @@ export default function App() {
         <Header view={view} onViewChange={setView} />
         <DemographicsView geoData={geoData} provinces={provinces} />
         <ChatBot />
+        <Analytics />
       </div>
     );
   }
@@ -172,6 +175,7 @@ export default function App() {
           onPlayProvince={handlePlayProvinceFromEncyclopedia}
         />
         <ChatBot />
+        <Analytics />
       </div>
     );
   }
@@ -182,6 +186,7 @@ export default function App() {
         <Header view={view} onViewChange={setView} />
         <Tour360View />
         <ChatBot />
+        <Analytics />
       </div>
     );
   }
@@ -230,6 +235,7 @@ export default function App() {
       )}
 
       <ChatBot />
+      <Analytics />
     </div>
   );
 }

@@ -12,6 +12,7 @@
     "process-demographics": "node scripts/processDemographics.cjs"
   },
   "dependencies": {
+    "@vercel/analytics": "^2.0.1",
     "framer-motion": "^12.41.0",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.21.0",
